@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="cn.com.findfine.jddaojia.MainActivity">
+
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/view_line"/>
+
+    <View
+        android:id="@+id/view_line"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        app:layout_constraintBottom_toTopOf="@+id/ll_home_page"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:id="@+id/ll_home_page"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ll_sort"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/selector_tab_home_page"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tab_main_text_color"
+            android:textSize="12sp"
+            android:text="首页"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_sort"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toEndOf="@id/ll_home_page"
+        app:layout_constraintEnd_toStartOf="@id/ll_shoppint_cart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:visibility="gone"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_tab_sort"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tab_main_text_color"
+            android:textSize="12sp"
+            android:text="分类"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_shoppint_cart"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toEndOf="@id/ll_sort"
+        app:layout_constraintEnd_toStartOf="@id/ll_order"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_tab_shopping_cart"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tab_main_text_color"
+            android:textSize="12sp"
+            android:text="购物车"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_order"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toEndOf="@id/ll_shoppint_cart"
+        app:layout_constraintEnd_toStartOf="@id/ll_my_info"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_tab_order"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tab_main_text_color"
+            android:textSize="12sp"
+            android:text="订单"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_my_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toEndOf="@id/ll_order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_tab_my_info"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/selector_tab_main_text_color"
+            android:textSize="12sp"
+            android:text="我的"/>
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

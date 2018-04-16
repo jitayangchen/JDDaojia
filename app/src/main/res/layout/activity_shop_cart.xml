@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="cn.com.findfine.jddaojia.shopcart.ShopCartActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
+    <View
+        android:id="@+id/view_bottom"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@android:color/white"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_shop_cart"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
+        app:layout_constraintBottom_toTopOf="@id/view_bottom"/>
+
+    <TextView
+        android:id="@+id/tv_goto_pay"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintEnd_toEndOf="@id/view_bottom"
+        app:layout_constraintTop_toTopOf="@id/view_bottom"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        android:background="@color/color_shop_deteil_gray"
+        android:gravity="center"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:text="去结算"/>
+
+    <TextView
+        android:id="@+id/tv_cart_goods_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/view_bottom"
+        app:layout_constraintBottom_toBottomOf="@id/view_bottom"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="10dp"
+        app:layout_goneMarginStart="10dp"
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_red_light"/>
+</android.support.constraint.ConstraintLayout>
