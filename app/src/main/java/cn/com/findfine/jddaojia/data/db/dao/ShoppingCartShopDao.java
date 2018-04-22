@@ -32,6 +32,7 @@ public class ShoppingCartShopDao {
         values.put(ShoppingCartShopContract.USER_ID, userId);
         values.put(ShoppingCartShopContract.SHOP_ID, shoppingCartShopBean.getShopId());
         values.put(ShoppingCartShopContract.SHOP_NAME, shoppingCartShopBean.getShopName());
+        values.put(ShoppingCartShopContract.SHOP_ADDRESS, shoppingCartShopBean.getShopAddress());
         long insert = db.insert(ShoppingCartShopContract.TABLE_NAME, null, values);
         return insert != -1;
     }
@@ -49,6 +50,7 @@ public class ShoppingCartShopDao {
         values.put(ShoppingCartShopContract.USER_ID, userId);
         values.put(ShoppingCartShopContract.SHOP_ID, shoppingCartShopBean.getShopId());
         values.put(ShoppingCartShopContract.SHOP_NAME, shoppingCartShopBean.getShopName());
+        values.put(ShoppingCartShopContract.SHOP_ADDRESS, shoppingCartShopBean.getShopAddress());
         int update = db.update(ShoppingCartShopContract.TABLE_NAME, values, ShoppingCartShopContract.SHOP_ID + "=? and " + ShoppingCartShopContract.USER_ID + "=?", new String[]{String.valueOf(shoppingCartShopBean.getShopId()), userId});
         return update >= 0;
     }
@@ -62,6 +64,7 @@ public class ShoppingCartShopDao {
             shoppingCartShopBean.setId(cursor.getInt(cursor.getColumnIndex(ShoppingCartShopContract._ID)));
             shoppingCartShopBean.setShopId(cursor.getInt(cursor.getColumnIndex(ShoppingCartShopContract.SHOP_ID)));
             shoppingCartShopBean.setShopName(cursor.getString(cursor.getColumnIndex(ShoppingCartShopContract.SHOP_NAME)));
+            shoppingCartShopBean.setShopAddress(cursor.getString(cursor.getColumnIndex(ShoppingCartShopContract.SHOP_ADDRESS)));
             shoppingCartShopBeans.add(shoppingCartShopBean);
         }
         cursor.close();
@@ -77,6 +80,7 @@ public class ShoppingCartShopDao {
             shoppingCartShopBean.setId(cursor.getInt(cursor.getColumnIndex(ShoppingCartShopContract._ID)));
             shoppingCartShopBean.setShopId(cursor.getInt(cursor.getColumnIndex(ShoppingCartShopContract.SHOP_ID)));
             shoppingCartShopBean.setShopName(cursor.getString(cursor.getColumnIndex(ShoppingCartShopContract.SHOP_NAME)));
+            shoppingCartShopBean.setShopAddress(cursor.getString(cursor.getColumnIndex(ShoppingCartShopContract.SHOP_ADDRESS)));
         }
         cursor.close();
         return shoppingCartShopBean;

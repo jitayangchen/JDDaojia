@@ -13,9 +13,6 @@ import cn.com.findfine.jddaojia.data.db.contract.ShoppingCartShopContract;
 import cn.com.findfine.jddaojia.data.db.contract.UserAddressContract;
 import cn.com.findfine.jddaojia.data.db.contract.UserContract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class JdDaojiaDbHelper extends SQLiteOpenHelper {
 

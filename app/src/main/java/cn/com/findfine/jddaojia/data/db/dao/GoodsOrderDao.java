@@ -11,9 +11,6 @@ import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
 import cn.com.findfine.jddaojia.data.db.JdDaojiaDbHelper;
 import cn.com.findfine.jddaojia.data.db.contract.GoodsOrderContract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class GoodsOrderDao {
 
@@ -31,6 +28,7 @@ public class GoodsOrderDao {
         values.put(GoodsOrderContract.CREATE_ORDER_TIME, goodsOrderBean.getCreateOrderTime());
         values.put(GoodsOrderContract.ORDER_STATUS, goodsOrderBean.getOrderStatus());
         values.put(GoodsOrderContract.SHOP_ID, goodsOrderBean.getShopId());
+        values.put(GoodsOrderContract.SHOP_NAME, goodsOrderBean.getShopName());
         values.put(GoodsOrderContract.GOODS_ARRAY, goodsOrderBean.getGoodsArray());
         values.put(GoodsOrderContract.GOODS_PRICE, goodsOrderBean.getGoodsPrice());
         values.put(GoodsOrderContract.USER_ADDRESS, goodsOrderBean.getUserAddress());
@@ -62,6 +60,7 @@ public class GoodsOrderDao {
             goodsOrderBean.setCreateOrderTime(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.CREATE_ORDER_TIME)));
             goodsOrderBean.setOrderStatus(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_STATUS)));
             goodsOrderBean.setShopId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.SHOP_ID)));
+            goodsOrderBean.setShopName(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.SHOP_NAME)));
             goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
             goodsOrderBean.setGoodsPrice(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_PRICE)));
             goodsOrderBean.setUserAddress(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.USER_ADDRESS)));

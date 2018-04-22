@@ -1,8 +1,5 @@
 package cn.com.findfine.jddaojia.data.db.contract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class GoodsOrderContract {
 
@@ -17,6 +14,7 @@ public class GoodsOrderContract {
     public static final String CREATE_ORDER_TIME = "create_order_time";
     public static final String ORDER_STATUS = "order_status";
     public static final String SHOP_ID = "shop_id";
+    public static final String SHOP_NAME = "shop_name";
     public static final String GOODS_ARRAY = "goods_array";
     public static final String GOODS_PRICE = "goods_price";
     public static final String USER_ADDRESS = "shop_address";
@@ -29,6 +27,7 @@ public class GoodsOrderContract {
                     CREATE_ORDER_TIME + " TEXT," +
                     ORDER_STATUS + " INTEGER," +
                     SHOP_ID + " INTEGER," +
+                    SHOP_NAME + " TEXT," +
                     GOODS_ARRAY + " TEXT," +
                     GOODS_PRICE + " TEXT," +
                     USER_ADDRESS + " TEXT)";

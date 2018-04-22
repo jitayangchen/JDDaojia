@@ -8,9 +8,6 @@ import cn.com.findfine.jddaojia.data.bean.UserInfo;
 import cn.com.findfine.jddaojia.data.db.JdDaojiaDbHelper;
 import cn.com.findfine.jddaojia.data.db.contract.UserContract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class UserDao {
 

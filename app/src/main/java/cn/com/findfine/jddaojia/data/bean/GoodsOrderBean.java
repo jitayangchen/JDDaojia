@@ -1,10 +1,10 @@
 package cn.com.findfine.jddaojia.data.bean;
 
-/**
- * Created by yangchen on 2018/4/16.
- */
 
-public class GoodsOrderBean {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class GoodsOrderBean implements Parcelable {
     private int id;
     private String userId;
     private String orderNumber;
@@ -15,6 +15,35 @@ public class GoodsOrderBean {
     private String goodsArray;
     private String goodsPrice;
     private String userAddress;
+
+    public GoodsOrderBean() {
+
+    }
+
+    protected GoodsOrderBean(Parcel in) {
+        id = in.readInt();
+        userId = in.readString();
+        orderNumber = in.readString();
+        createOrderTime = in.readString();
+        orderStatus = in.readInt();
+        shopId = in.readInt();
+        shopName = in.readString();
+        goodsArray = in.readString();
+        goodsPrice = in.readString();
+        userAddress = in.readString();
+    }
+
+    public static final Creator<GoodsOrderBean> CREATOR = new Creator<GoodsOrderBean>() {
+        @Override
+        public GoodsOrderBean createFromParcel(Parcel in) {
+            return new GoodsOrderBean(in);
+        }
+
+        @Override
+        public GoodsOrderBean[] newArray(int size) {
+            return new GoodsOrderBean[size];
+        }
+    };
 
     public int getId() {
         return id;
@@ -94,5 +123,24 @@ public class GoodsOrderBean {
 
     public void setUserAddress(String userAddress) {
         this.userAddress = userAddress;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(userId);
+        dest.writeString(orderNumber);
+        dest.writeString(createOrderTime);
+        dest.writeInt(orderStatus);
+        dest.writeInt(shopId);
+        dest.writeString(shopName);
+        dest.writeString(goodsArray);
+        dest.writeString(goodsPrice);
+        dest.writeString(userAddress);
     }
 }

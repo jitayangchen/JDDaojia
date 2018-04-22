@@ -1,6 +1,7 @@
 package cn.com.findfine.jddaojia.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -22,20 +23,21 @@ import java.util.List;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
+import cn.com.findfine.jddaojia.order.OrderDetailActivity;
 import cn.com.findfine.jddaojia.utils.FileUtil;
 
-/**
- * Created by yangchen on 2018/4/16.
- */
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
 
     private List<GoodsOrderBean> goodsOrderBeans;
     private Context context;
 
-    public OrderAdapter(List<GoodsOrderBean> goodsOrderBeans, Context context) {
-        this.goodsOrderBeans = goodsOrderBeans;
+    public OrderAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setGoodsOrderBeans(List<GoodsOrderBean> goodsOrderBeans) {
+        this.goodsOrderBeans = goodsOrderBeans;
     }
 
     @NonNull
@@ -149,15 +151,15 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             tvGoodsPrice_3 = itemView.findViewById(R.id.tv_goods_price_3);
             tvGoodsPrice_4 = itemView.findViewById(R.id.tv_goods_price_4);
 
-//            itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    ShoppingCartShopBean shoppingCartShopBean = shoppingCartShopBeans.get(getLayoutPosition());
-//                    Intent intent = new Intent(context, ShopCartActivity.class);
-//                    intent.putExtra("shop_id", shoppingCartShopBean.getShopId());
-//                    context.startActivity(intent);
-//                }
-//            });
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, OrderDetailActivity.class);
+                    GoodsOrderBean goodsOrderBean = goodsOrderBeans.get(getLayoutPosition());
+                    intent.putExtra("goods_order_bean", goodsOrderBean);
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

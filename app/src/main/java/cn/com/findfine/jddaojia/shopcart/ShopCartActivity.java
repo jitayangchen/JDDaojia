@@ -40,6 +40,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private View tvGotoPay;
     private TextView tvCartGoodsPrice;
     private int shopId;
+    private String shopName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +64,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
     private void init() {
         Intent intent = getIntent();
         shopId = intent.getIntExtra("shop_id", 0);
+        shopName = intent.getStringExtra("shop_name");
 
         tvGotoPay = findViewById(R.id.tv_goto_pay);
         tvCartGoodsPrice = findViewById(R.id.tv_cart_goods_price);
@@ -84,6 +86,7 @@ public class ShopCartActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_goto_pay:
                 Intent gotoPayIntent = new Intent(this, NewOrderActivity.class);
                 gotoPayIntent.putExtra("shop_id", shopId);
+                gotoPayIntent.putExtra("shop_name", shopName);
                 startActivity(gotoPayIntent);
                 break;
         }

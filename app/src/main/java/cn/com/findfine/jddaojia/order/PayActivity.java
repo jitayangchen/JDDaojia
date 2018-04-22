@@ -9,6 +9,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import cn.com.findfine.jddaojia.BaseActivity;
+import cn.com.findfine.jddaojia.MainActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.db.contract.GoodsOrderContract;
 import cn.com.findfine.jddaojia.data.db.dao.GoodsOrderDao;
@@ -49,6 +50,10 @@ public class PayActivity extends BaseActivity {
                 goodsOrderDao.updateOrder(orderNumber, GoodsOrderContract.ORDER_STATUS_SUCCESS);
 
                 Toast.makeText(PayActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+
+                Intent orderFragmentIntent = new Intent(PayActivity.this, MainActivity.class);
+                orderFragmentIntent.putExtra("is_refresh_order", true);
+                startActivity(orderFragmentIntent);
             }
         });
     }

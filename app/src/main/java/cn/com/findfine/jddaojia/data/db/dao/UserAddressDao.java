@@ -11,9 +11,6 @@ import cn.com.findfine.jddaojia.data.bean.UserAddress;
 import cn.com.findfine.jddaojia.data.db.JdDaojiaDbHelper;
 import cn.com.findfine.jddaojia.data.db.contract.UserAddressContract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class UserAddressDao {
 

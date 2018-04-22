@@ -54,7 +54,13 @@
         <activity
             android:name=".order.PayActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".order.OrderDetailActivity"></activity>
+        <activity
+            android:name=".order.OrderDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".search.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".search.SearchListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

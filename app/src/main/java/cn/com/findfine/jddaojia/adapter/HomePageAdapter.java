@@ -27,9 +27,6 @@ import cn.com.findfine.jddaojia.data.bean.ShopBean;
 import cn.com.findfine.jddaojia.shop.ShopDetialActivity;
 import cn.com.findfine.jddaojia.utils.FileUtil;
 
-/**
- * Created by yangchen on 2018/3/26.
- */
 
 public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHolder> {
 

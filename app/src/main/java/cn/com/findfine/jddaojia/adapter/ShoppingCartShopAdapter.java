@@ -21,9 +21,6 @@ import cn.com.findfine.jddaojia.data.bean.ShoppingCartShopBean;
 import cn.com.findfine.jddaojia.shopcart.ShopCartActivity;
 import cn.com.findfine.jddaojia.utils.FileUtil;
 
-/**
- * Created by yangchen on 2018/4/5.
- */
 
 public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartShopAdapter.ViewHolder> {
 
@@ -135,6 +132,7 @@ public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartSh
                     ShoppingCartShopBean shoppingCartShopBean = shoppingCartShopBeans.get(getLayoutPosition());
                     Intent intent = new Intent(context, ShopCartActivity.class);
                     intent.putExtra("shop_id", shoppingCartShopBean.getShopId());
+                    intent.putExtra("shop_name", shoppingCartShopBean.getShopName() + "(" + shoppingCartShopBean.getShopAddress() + ")");
                     context.startActivity(intent);
                 }
             });

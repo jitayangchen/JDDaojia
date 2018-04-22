@@ -122,6 +122,8 @@ public class MyAddressActivity extends BaseActivity implements View.OnClickListe
         if (requestCode == 1000 && resultCode == 2000) {
             userAddresses = userAddressDao.queryAllUserAddressByUserId(userId);
             addressAdapter.notifyDataSetChanged();
+
+            setResult(3001);
         }
     }
 }

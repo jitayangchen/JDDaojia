@@ -3,9 +3,6 @@ package cn.com.findfine.jddaojia.data.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by yangchen on 2018/4/3.
- */
 
 public class UserAddress implements Parcelable {
     private int id;

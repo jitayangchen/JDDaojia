@@ -11,9 +11,6 @@ import cn.com.findfine.jddaojia.data.bean.ShopBean;
 import cn.com.findfine.jddaojia.data.db.JdDaojiaDbHelper;
 import cn.com.findfine.jddaojia.data.db.contract.ShopContract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class ShopDao {
 
@@ -65,5 +62,21 @@ public class ShopDao {
         }
         cursor.close();
         return shopBeans;
+    }
+
+    public ShopBean queryShopByShopId(int shopId) {
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(ShopContract.TABLE_NAME, null, ShopContract.SHOP_ID + "=?", new String[]{String.valueOf(shopId)}, null, null, ShopContract._ID + " DESC");
+        ShopBean shopBean = null;
+        if (cursor.moveToNext()) {
+            shopBean = new ShopBean();
+            shopBean.setId(cursor.getInt(cursor.getColumnIndex(ShopContract._ID)));
+            shopBean.setShopId(cursor.getInt(cursor.getColumnIndex(ShopContract.SHOP_ID)));
+            shopBean.setShopName(cursor.getString(cursor.getColumnIndex(ShopContract.SHOP_NAME)));
+            shopBean.setShopPhoto(cursor.getString(cursor.getColumnIndex(ShopContract.SHOP_PHOTO)));
+            shopBean.setShopAddress(cursor.getString(cursor.getColumnIndex(ShopContract.SHOP_ADDRESS)));
+        }
+        cursor.close();
+        return shopBean;
     }
 }

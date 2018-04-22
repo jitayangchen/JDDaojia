@@ -96,7 +96,7 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
 
         loadData();
 
-        goodsListAdapter = new GoodsListAdapter(this, shopBean.getShopName());
+        goodsListAdapter = new GoodsListAdapter(this, shopBean.getShopName(), shopBean.getShopAddress());
         goodsListAdapter.setGoodsBeans(goodsBeans);
         rvShopGoodsList.setAdapter(goodsListAdapter);
 
@@ -114,24 +114,28 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
         cartGoodsPrice = 0.0f;
 
         goodsBeans = goodsDao.queryGoodsByShopId(shopBean.getShopId());
+        boolean loginStatus = SharedPreferencesUtil.getLoginStatus(this);
+        if (loginStatus) {
+            ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
+            List<GoodsBean> goodsBeansCart = shoppingCartGoodsDao.queryGoodsCartByUserIdAndShopId(SharedPreferencesUtil.getUserAccount(this), shopBean.getShopId());
+            if (goodsBeansCart.size() > 0) {
+                setBottomStatus(true);
 
-        ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
-        List<GoodsBean> goodsBeansCart = shoppingCartGoodsDao.queryGoodsCartByUserIdAndShopId(SharedPreferencesUtil.getUserAccount(this), shopBean.getShopId());
-        if (goodsBeansCart.size() > 0) {
-            setBottomStatus(true);
-
-            for (GoodsBean goodsBean : goodsBeans) {
-                for (GoodsBean goodsBeanTemp : goodsBeansCart) {
-                    if (goodsBean.getGoodsId() == goodsBeanTemp.getGoodsId()) {
-                        cartCount += goodsBeanTemp.getGoodsCartCount();
-                        cartGoodsPrice += goodsBeanTemp.getGoodsPrice() * goodsBeanTemp.getGoodsCartCount();
-                        goodsBean.setGoodsCartCount(goodsBeanTemp.getGoodsCartCount());
-                        break;
+                for (GoodsBean goodsBean : goodsBeans) {
+                    for (GoodsBean goodsBeanTemp : goodsBeansCart) {
+                        if (goodsBean.getGoodsId() == goodsBeanTemp.getGoodsId()) {
+                            cartCount += goodsBeanTemp.getGoodsCartCount();
+                            cartGoodsPrice += goodsBeanTemp.getGoodsPrice() * goodsBeanTemp.getGoodsCartCount();
+                            goodsBean.setGoodsCartCount(goodsBeanTemp.getGoodsCartCount());
+                            break;
+                        }
                     }
                 }
+                tvCartCount.setText(String.valueOf(cartCount));
+                tvCartGoodsPrice.setText("￥" + String.valueOf(cartGoodsPrice));
+            } else {
+                setBottomStatus(false);
             }
-            tvCartCount.setText(String.valueOf(cartCount));
-            tvCartGoodsPrice.setText("￥" + String.valueOf(cartGoodsPrice));
         } else {
             setBottomStatus(false);
         }
@@ -143,12 +147,14 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
             case R.id.btn_cart:
                 Intent intent = new Intent(this, ShopCartActivity.class);
                 intent.putExtra("shop_id", shopBean.getShopId());
+                intent.putExtra("shop_name", shopBean.getShopName() + "(" + shopBean.getShopAddress() + ")");
                 startActivityForResult(intent, 2000);
                 break;
             case R.id.tv_goto_pay:
                 Intent gotoPayIntent = new Intent(this, NewOrderActivity.class);
                 gotoPayIntent.putExtra("shop_id", shopBean.getShopId());
-                startActivity(gotoPayIntent);
+                gotoPayIntent.putExtra("shop_name", shopBean.getShopName() + "(" + shopBean.getShopAddress() + ")");
+                startActivityForResult(gotoPayIntent, 2000);
                 break;
         }
     }

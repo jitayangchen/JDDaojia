@@ -3,9 +3,6 @@ package cn.com.findfine.jddaojia.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-/**
- * Created by yangchen on 2018/3/28.
- */
 
 public class SharedPreferencesUtil {
     public static void setLoginStatus(Context context, boolean loginStatus) {

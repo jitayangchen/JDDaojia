@@ -3,9 +3,6 @@ package cn.com.findfine.jddaojia.data.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-/**
- * Created by yangchen on 2018/3/30.
- */
 
 public class GoodsBean implements Parcelable {
 
@@ -89,6 +86,21 @@ public class GoodsBean implements Parcelable {
 
     public void setGoodsCartCount(int goodsCartCount) {
         this.goodsCartCount = goodsCartCount;
+    }
+
+    @Override
+    public String toString() {
+        return "GoodsBean{" +
+                "id=" + id +
+                ", goodsId=" + goodsId +
+                ", shopId=" + shopId +
+                ", goodsName='" + goodsName + '\'' +
+                ", goodsPhoto='" + goodsPhoto + '\'' +
+                ", goodsPrice=" + goodsPrice +
+                ", goodsCategory='" + goodsCategory + '\'' +
+                ", goodsSalesVolume=" + goodsSalesVolume +
+                ", goodsCartCount=" + goodsCartCount +
+                '}';
     }
 
     @Override

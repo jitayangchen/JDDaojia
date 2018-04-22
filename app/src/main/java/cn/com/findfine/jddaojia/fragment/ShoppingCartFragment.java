@@ -37,6 +37,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
     private ShoppingCartShopDao shoppingCartShopDao;
     private ShoppingCartGoodsDao shoppingCartGoodsDao;
     private boolean isRefreshShopCart = false;
+    private RecyclerView rvShoppingCartShop;
 
     public ShoppingCartFragment() {
     }
@@ -67,7 +68,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("我的购物车");
 
-        RecyclerView rvShoppingCartShop = view.findViewById(R.id.rv_shopping_cart_shop);
+        rvShoppingCartShop = view.findViewById(R.id.rv_shopping_cart_shop);
         rvShoppingCartShop.setLayoutManager(new LinearLayoutManager(getContext()));
 
         shoppingCartShopAdapter = new ShoppingCartShopAdapter(getData(), getContext());
@@ -99,7 +100,7 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         boolean loginStatus = SharedPreferencesUtil.getLoginStatus(getContext());
         setLoginStatus(loginStatus);
 
-        if (isRefreshShopCart) {
+        if (isRefreshShopCart && loginStatus) {
             shoppingCartShopAdapter.setShoppingCartShopBeans(getData());
             shoppingCartShopAdapter.notifyDataSetChanged();
         }
@@ -138,8 +139,10 @@ public class ShoppingCartFragment extends Fragment implements View.OnClickListen
         if (loginStatus) {
             Log.i("Login", "========= Login Success ========");
             btnLogin.setVisibility(View.GONE);
+            rvShoppingCartShop.setVisibility(View.VISIBLE);
         } else {
             btnLogin.setVisibility(View.VISIBLE);
+            rvShoppingCartShop.setVisibility(View.GONE);
         }
     }
 }

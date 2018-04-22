@@ -1,8 +1,5 @@
 package cn.com.findfine.jddaojia;
 
-/**
- * Created by yangchen on 2018/3/28.
- */
 
 public class Constant {
     public static final String LOGIN_STATUS = "login_status";

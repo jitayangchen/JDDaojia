@@ -31,6 +31,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     private LocalBroadcastManager localBroadcastManager;
     private MyBroadcastReceiver myBroadcastReceiver;
     private View btnLogin;
+    private GoodsOrderDao goodsOrderDao;
+    private OrderAdapter orderAdapter;
+    private boolean isRefreshOrder = false;
+    private RecyclerView rvOrderGoodsList;
 
     public OrderFragment() {
     }
@@ -60,11 +64,12 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         btnLogin = view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
 
-        RecyclerView rvOrderGoodsList = view.findViewById(R.id.rv_order_goods_list);
+        rvOrderGoodsList = view.findViewById(R.id.rv_order_goods_list);
         rvOrderGoodsList.setLayoutManager(new LinearLayoutManager(getContext()));
-        GoodsOrderDao goodsOrderDao = new GoodsOrderDao();
-        List<GoodsOrderBean> goodsOrderBeans = goodsOrderDao.queryAllOrderByUserId(SharedPreferencesUtil.getUserAccount(getContext()));
-        rvOrderGoodsList.setAdapter(new OrderAdapter(goodsOrderBeans, getContext()));
+        goodsOrderDao = new GoodsOrderDao();
+        orderAdapter = new OrderAdapter(getContext());
+        refreshOrder();
+        rvOrderGoodsList.setAdapter(orderAdapter);
         return view;
     }
 
@@ -73,6 +78,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         super.onResume();
         boolean loginStatus = SharedPreferencesUtil.getLoginStatus(getContext());
         setLoginStatus(loginStatus);
+
+        if (isRefreshOrder && loginStatus) {
+            refreshOrder();
+        }
+        isRefreshOrder = true;
     }
 
     @Override
@@ -82,6 +92,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                 startActivity(new Intent(getContext(), LoginActivity.class));
                 break;
         }
+    }
+
+    public void refreshOrder() {
+        List<GoodsOrderBean> goodsOrderBeans = goodsOrderDao.queryAllOrderByUserId(SharedPreferencesUtil.getUserAccount(getContext()));
+        orderAdapter.setGoodsOrderBeans(goodsOrderBeans);
     }
 
     private class MyBroadcastReceiver extends BroadcastReceiver {
@@ -103,8 +118,10 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         if (loginStatus) {
             Log.i("Login", "========= Login Success ========");
             btnLogin.setVisibility(View.GONE);
+            rvOrderGoodsList.setVisibility(View.VISIBLE);
         } else {
             btnLogin.setVisibility(View.VISIBLE);
+            rvOrderGoodsList.setVisibility(View.GONE);
         }
     }
 

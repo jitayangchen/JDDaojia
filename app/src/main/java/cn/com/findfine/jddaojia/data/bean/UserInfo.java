@@ -1,8 +1,5 @@
 package cn.com.findfine.jddaojia.data.bean;
 
-/**
- * Created by yangchen on 2018/4/4.
- */
 
 public class UserInfo {
 

@@ -3,6 +3,7 @@ package cn.com.findfine.jddaojia.data.db.dao;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +12,6 @@ import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.db.JdDaojiaDbHelper;
 import cn.com.findfine.jddaojia.data.db.contract.GoodsContract;
 
-/**
- * Created by yangchen on 2017/9/25.
- */
 
 public class GoodsDao {
 
@@ -113,5 +111,27 @@ public class GoodsDao {
         }
         cursor.close();
         return goodsBean;
+    }
+
+    public List<GoodsBean> queryGoodsByKeyWords(String keyWords) {
+        List<GoodsBean> goodsBeans = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "SELECT  * FROM " + GoodsContract.TABLE_NAME + " where " + GoodsContract.GOODS_NAME + " like '%" + keyWords + "%'";
+        Log.i("KeyWords", sql);
+        Cursor cursor = db.rawQuery(sql, null);
+        while (cursor.moveToNext()) {
+            GoodsBean goodsBean = new GoodsBean();
+            goodsBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsContract._ID)));
+            goodsBean.setGoodsId(cursor.getInt(cursor.getColumnIndex(GoodsContract.GOODS_ID)));
+            goodsBean.setShopId(cursor.getInt(cursor.getColumnIndex(GoodsContract.SHOP_ID)));
+            goodsBean.setGoodsName(cursor.getString(cursor.getColumnIndex(GoodsContract.GOODS_NAME)));
+            goodsBean.setGoodsPhoto(cursor.getString(cursor.getColumnIndex(GoodsContract.GOODS_PHOTO)));
+            goodsBean.setGoodsPrice(cursor.getFloat(cursor.getColumnIndex(GoodsContract.GOODS_PRICE)));
+            goodsBean.setGoodsCategory(cursor.getString(cursor.getColumnIndex(GoodsContract.GOODS_CATEGORY)));
+            goodsBean.setGoodsSalesVolume(cursor.getInt(cursor.getColumnIndex(GoodsContract.GOODS_SALES_VOLUME)));
+            goodsBeans.add(goodsBean);
+        }
+        cursor.close();
+        return goodsBeans;
     }
 }

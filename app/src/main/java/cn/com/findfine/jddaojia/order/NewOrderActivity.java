@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
+import cn.com.findfine.jddaojia.Constant;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
@@ -35,10 +36,11 @@ import cn.com.findfine.jddaojia.data.db.dao.GoodsOrderDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartGoodsDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartShopDao;
 import cn.com.findfine.jddaojia.data.db.dao.UserAddressDao;
+import cn.com.findfine.jddaojia.myinfo.MyAddressActivity;
 import cn.com.findfine.jddaojia.utils.FileUtil;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
 
-public class NewOrderActivity extends BaseActivity {
+public class NewOrderActivity extends BaseActivity implements View.OnClickListener {
 
     private List<GoodsBean> goodsBeans;
     private int shopId;
@@ -48,6 +50,10 @@ public class NewOrderActivity extends BaseActivity {
     private boolean isCreateOrder = false;
     private String orderNumber;
     private String userId;
+    private String shopName;
+    private UserAddressDao userAddressDao;
+    private TextView tvUserAddress;
+    private TextView tvUserInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,22 +73,19 @@ public class NewOrderActivity extends BaseActivity {
 
         Intent intent = getIntent();
         shopId = intent.getIntExtra("shop_id", 0);
+        shopName = intent.getStringExtra("shop_name");
         userId = SharedPreferencesUtil.getUserAccount(this);
         init();
     }
 
     private void init() {
-        TextView tvUserAddress = findViewById(R.id.tv_user_address);
-        TextView tvUserInfo = findViewById(R.id.tv_user_info);
+        tvUserAddress = findViewById(R.id.tv_user_address);
+        tvUserInfo = findViewById(R.id.tv_user_info);
+        tvUserAddress.setOnClickListener(this);
+        tvUserInfo.setOnClickListener(this);
 
-        UserAddressDao userAddressDao = new UserAddressDao();
-        List<UserAddress> userAddressList = userAddressDao.queryAllUserAddressByUserId(SharedPreferencesUtil.getUserAccount(this));
-        if (userAddressList.size() > 0) {
-            userAddress = userAddressList.get(0);
-            tvUserAddress.setText(userAddress.getAddress());
-
-            tvUserInfo.setText(userAddress.getName() + "        " + userAddress.getPhoneNumber());
-        }
+        userAddressDao = new UserAddressDao();
+        initUserAddress();
 
         ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
         goodsBeans = shoppingCartGoodsDao.queryGoodsCartByUserIdAndShopId(SharedPreferencesUtil.getUserAccount(this), shopId);
@@ -123,6 +126,39 @@ public class NewOrderActivity extends BaseActivity {
         });
     }
 
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tv_user_address:
+            case R.id.tv_user_info:
+                Intent intent = new Intent(this, MyAddressActivity.class);
+                startActivityForResult(intent, 3000);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 3000 && resultCode == 3001) {
+            initUserAddress();
+        }
+    }
+
+    private void initUserAddress() {
+        List<UserAddress> userAddressList = userAddressDao.queryAllUserAddressByUserId(SharedPreferencesUtil.getUserAccount(this));
+        if (userAddressList.size() > 0) {
+            userAddress = userAddressList.get(0);
+            tvUserAddress.setText(userAddress.getAddress());
+
+            tvUserInfo.setVisibility(View.VISIBLE);
+            tvUserInfo.setText(userAddress.getName() + "        " + userAddress.getPhoneNumber());
+        } else {
+            tvUserAddress.setText("请选择收货地址");
+            tvUserInfo.setVisibility(View.GONE);
+        }
+    }
+
     private void createOrder() {
         if (userAddress == null) {
             Toast.makeText(this, "请选择收货地址", Toast.LENGTH_SHORT).show();
@@ -140,6 +176,7 @@ public class NewOrderActivity extends BaseActivity {
             goodsOrderBean.setCreateOrderTime(sdf.format(date));
             goodsOrderBean.setOrderStatus(GoodsOrderContract.ORDER_STATUS_UNPAY);
             goodsOrderBean.setShopId(shopId);
+            goodsOrderBean.setShopName(shopName);
             goodsOrderBean.setGoodsArray(goodsArrayJson);
             goodsOrderBean.setGoodsPrice(String.valueOf(cartGoodsPrice));
             goodsOrderBean.setUserAddress(userAddress.getName() + "  " + userAddress.getPhoneNumber() + '\n' + userAddress.getAddress());
@@ -151,6 +188,11 @@ public class NewOrderActivity extends BaseActivity {
             shoppingCartShopDao.deleteShopCartById(userId, shopId);
             ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
             shoppingCartGoodsDao.deleteGoodsCartByUserIdAndShopId(userId, shopId);
+
+            Intent intent = new Intent();
+            intent.putExtra(Constant.REFRESH_SHOP_CART, true);
+            setResult(2001, intent);
+
             isCreateOrder = true;
         }
 

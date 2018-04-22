@@ -2,9 +2,6 @@ package cn.com.findfine.jddaojia;
 
 import android.app.Application;
 
-/**
- * Created by yangchen on 2018/3/29.
- */
 
 public class JDApplication extends Application {
 

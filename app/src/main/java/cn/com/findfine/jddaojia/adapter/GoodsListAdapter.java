@@ -33,13 +33,15 @@ public class GoodsListAdapter extends RecyclerView.Adapter<GoodsListAdapter.View
     private Context context;
     private List<GoodsBean> goodsBeans;
     private String shopName;
+    private String shopAddress;
     private String userId;
     private ShoppingCartShopDao shoppingCartShopDao = null;
     private ShoppingCartGoodsDao shoppingCartGoodsDao = null;
 
-    public GoodsListAdapter(Context context, String shopName) {
+    public GoodsListAdapter(Context context, String shopName, String shopAddress) {
         this.context = context;
         this.shopName = shopName;
+        this.shopAddress = shopAddress;
         userId = SharedPreferencesUtil.getUserAccount(context);
     }
 
@@ -191,6 +193,7 @@ public class GoodsListAdapter extends RecyclerView.Adapter<GoodsListAdapter.View
                 shoppingCartShopBean = new ShoppingCartShopBean();
                 shoppingCartShopBean.setShopId(goodsBean.getShopId());
                 shoppingCartShopBean.setShopName(shopName);
+                shoppingCartShopBean.setShopAddress(shopAddress);
                 shoppingCartShopDao.insertShopCart(shoppingCartShopBean, userId);
                 Log.i("DATA", "插入了shop cart");
 

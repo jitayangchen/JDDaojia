@@ -1,5 +1,6 @@
 package cn.com.findfine.jddaojia;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -63,6 +64,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         llMyInfo.setOnClickListener(this);
 
         llHomePage.setSelected(true);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        boolean isRefreshOrder = intent.getBooleanExtra("is_refresh_order", false);
+        if (isRefreshOrder) {
+//            orderFragment.refreshOrder();
+            showFragment(orderFragment, TAG_ORDER);
+        }
     }
 
     @Override

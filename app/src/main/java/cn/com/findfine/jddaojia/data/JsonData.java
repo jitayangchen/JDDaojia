@@ -1,8 +1,5 @@
 package cn.com.findfine.jddaojia.data;
 
-/**
- * Created by yangchen on 2018/3/30.
- */
 
 public class JsonData {
 

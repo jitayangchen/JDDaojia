@@ -5,9 +5,6 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-/**
- * Created by yangchen on 2018/3/30.
- */
 
 public class ShopBean implements Parcelable {
 

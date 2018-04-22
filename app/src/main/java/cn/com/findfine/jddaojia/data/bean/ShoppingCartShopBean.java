@@ -2,15 +2,13 @@ package cn.com.findfine.jddaojia.data.bean;
 
 import java.util.List;
 
-/**
- * Created by yangchen on 2018/4/4.
- */
 
 public class ShoppingCartShopBean {
 
     private int id;
     private int shopId;
     private String shopName;
+    private String shopAddress;
     private List<GoodsBean> goodsBeanList;
 
     public int getId() {
@@ -35,6 +33,14 @@ public class ShoppingCartShopBean {
 
     public void setShopName(String shopName) {
         this.shopName = shopName;
+    }
+
+    public String getShopAddress() {
+        return shopAddress;
+    }
+
+    public void setShopAddress(String shopAddress) {
+        this.shopAddress = shopAddress;
     }
 
     public List<GoodsBean> getGoodsBeanList() {
