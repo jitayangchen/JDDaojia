@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".JDApplication"
@@ -57,10 +58,17 @@
         <activity
             android:name=".order.OrderDetailActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".search.SearchActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".search.SearchListActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".search.SearchActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".search.SearchListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".order.OrderEvaluationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".myinfo.MyEvaluationActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
 </manifest>

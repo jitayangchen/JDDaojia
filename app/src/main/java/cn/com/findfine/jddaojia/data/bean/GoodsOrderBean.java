@@ -15,6 +15,7 @@ public class GoodsOrderBean implements Parcelable {
     private String goodsArray;
     private String goodsPrice;
     private String userAddress;
+    private int orderEvaluation = 0;
 
     public GoodsOrderBean() {
 
@@ -31,6 +32,7 @@ public class GoodsOrderBean implements Parcelable {
         goodsArray = in.readString();
         goodsPrice = in.readString();
         userAddress = in.readString();
+        orderEvaluation = in.readInt();
     }
 
     public static final Creator<GoodsOrderBean> CREATOR = new Creator<GoodsOrderBean>() {
@@ -125,6 +127,31 @@ public class GoodsOrderBean implements Parcelable {
         this.userAddress = userAddress;
     }
 
+    public int getOrderEvaluation() {
+        return orderEvaluation;
+    }
+
+    public void setOrderEvaluation(int orderEvaluation) {
+        this.orderEvaluation = orderEvaluation;
+    }
+
+    @Override
+    public String toString() {
+        return "GoodsOrderBean{" +
+                "id=" + id +
+                ", userId='" + userId + '\'' +
+                ", orderNumber='" + orderNumber + '\'' +
+                ", createOrderTime='" + createOrderTime + '\'' +
+                ", orderStatus=" + orderStatus +
+                ", shopId=" + shopId +
+                ", shopName='" + shopName + '\'' +
+                ", goodsArray='" + goodsArray + '\'' +
+                ", goodsPrice='" + goodsPrice + '\'' +
+                ", userAddress='" + userAddress + '\'' +
+                ", orderEvaluation=" + orderEvaluation +
+                '}';
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -142,5 +169,6 @@ public class GoodsOrderBean implements Parcelable {
         dest.writeString(goodsArray);
         dest.writeString(goodsPrice);
         dest.writeString(userAddress);
+        dest.writeInt(orderEvaluation);
     }
 }

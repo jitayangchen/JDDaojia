@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -67,6 +68,16 @@ public class OrderDetailActivity extends BaseActivity {
 
         tvGoodsPriceRight.setText("￥" + String.valueOf(goodsPrice));
         tvAllPriceRight.setText("￥" + String.valueOf(goodsPrice + 10.0f));
+
+        Button btnOrderEvaluation = findViewById(R.id.btn_order_evaluation);
+        btnOrderEvaluation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderDetailActivity.this, OrderEvaluationActivity.class);
+                intent.putExtra("order_number", goodsOrderBean.getOrderNumber());
+                startActivity(intent);
+            }
+        });
     }
 
     private void initGoodsList(String goodsJson, LinearLayout llOrderGoods) {

@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import cn.com.findfine.jddaojia.Constant;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.myinfo.MyAddressActivity;
+import cn.com.findfine.jddaojia.myinfo.MyEvaluationActivity;
 import cn.com.findfine.jddaojia.myinfo.SettingActivity;
 import cn.com.findfine.jddaojia.login.LoginActivity;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
@@ -56,13 +57,13 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         btnLogin = view.findViewById(R.id.btn_login);
         View btnSetting = view.findViewById(R.id.btn_setting);
         View llMyFollow = view.findViewById(R.id.ll_my_follow);
-        View llMyOpinion = view.findViewById(R.id.ll_my_opinion);
+        View llMyEvaluation = view.findViewById(R.id.ll_my_evaluation);
         View llMyAddress = view.findViewById(R.id.ll_my_address);
 
         btnLogin.setOnClickListener(this);
         btnSetting.setOnClickListener(this);
         llMyFollow.setOnClickListener(this);
-        llMyOpinion.setOnClickListener(this);
+        llMyEvaluation.setOnClickListener(this);
         llMyAddress.setOnClickListener(this);
     }
 
@@ -85,8 +86,8 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
             case R.id.ll_my_follow:
 
                 break;
-            case R.id.ll_my_opinion:
-
+            case R.id.ll_my_evaluation:
+                startActivity(new Intent(getContext(), MyEvaluationActivity.class));
                 break;
             case R.id.ll_my_address:
                 boolean loginStatus = SharedPreferencesUtil.getLoginStatus(getContext());

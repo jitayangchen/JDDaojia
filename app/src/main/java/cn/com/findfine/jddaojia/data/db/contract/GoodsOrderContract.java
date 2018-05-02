@@ -17,6 +17,7 @@ public class GoodsOrderContract {
     public static final String SHOP_NAME = "shop_name";
     public static final String GOODS_ARRAY = "goods_array";
     public static final String GOODS_PRICE = "goods_price";
+    public static final String ORDER_EVALUATION = "order_evaluation";
     public static final String USER_ADDRESS = "shop_address";
 
     public static final String SQL_CREATE_ORDER =
@@ -30,5 +31,6 @@ public class GoodsOrderContract {
                     SHOP_NAME + " TEXT," +
                     GOODS_ARRAY + " TEXT," +
                     GOODS_PRICE + " TEXT," +
+                    ORDER_EVALUATION + " INTEGER," +
                     USER_ADDRESS + " TEXT)";
 }
