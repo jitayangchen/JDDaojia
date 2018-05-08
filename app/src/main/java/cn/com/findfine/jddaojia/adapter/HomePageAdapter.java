@@ -3,7 +3,6 @@ package cn.com.findfine.jddaojia.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +23,6 @@ import cn.com.findfine.jddaojia.data.JsonData;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShopBean;
 import cn.com.findfine.jddaojia.shop.ShopDetialActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 
 
 public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHolder> {
@@ -34,8 +31,11 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
     private List<ShopBean> shopBeans;
 
 
-    public HomePageAdapter(Context context, List<ShopBean> shopBeans) {
+    public HomePageAdapter(Context context) {
         this.context = context;
+    }
+
+    public void setShopBeans(List<ShopBean> shopBeans) {
         this.shopBeans = shopBeans;
     }
 
@@ -77,13 +77,17 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         ShopBean shopBean = shopBeans.get(position);
-        File file = new File(FileUtil.getCacheFilePath() + shopBean.getShopPhoto());
-        Glide.with(context).load(file).into(holder.ivShopPhoto);
+//        File file = new File(FileUtil.getCacheFilePath() + shopBean.getShopPhoto());
+        Glide.with(context).load("http://115.28.17.184/" + shopBean.getShopPhoto()).into(holder.ivShopPhoto);
         holder.tvShopName.setText(shopBean.getShopName());
+        holder.tvSoppInfo.setText(shopBean.getShopAddress());
     }
 
     @Override
     public int getItemCount() {
+        if (shopBeans == null) {
+            return 0;
+        }
         return shopBeans.size();
     }
 
@@ -91,11 +95,13 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
 
         ImageView ivShopPhoto;
         TextView tvShopName;
+        TextView tvSoppInfo;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             ivShopPhoto = itemView.findViewById(R.id.iv_shop_photo);
             tvShopName = itemView.findViewById(R.id.tv_shop_name);
+            tvSoppInfo = itemView.findViewById(R.id.tv_sopp_info);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -106,32 +112,32 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
 
 
 
-                    JSONArray jsonArray = new JSONArray();
-                    JSONObject jsonObject = new JSONObject();
-                    try {
-                        jsonObject.put("shop_id", 100001);
-                        jsonObject.put("shop_name", "周黑鸭");
-                        jsonObject.put("shop_photo", "100.jpg");
-                        jsonObject.put("shop_address", "青岛市城阳区村里");
-
-                        JSONArray goodsArray = new JSONArray();
-                        JSONObject goodsObject = new JSONObject();
-                        goodsObject.put("goods_id", 100);
-                        goodsObject.put("shop_id", 100001);
-                        goodsObject.put("goods_name", "鸭脖");
-                        goodsObject.put("goods_photo", "100001.jpg");
-                        goodsObject.put("goods_price", 6.6);
-                        goodsObject.put("goods_category", "category");
-                        goodsObject.put("goods_sales_volume", 10);
-                        goodsArray.put(goodsObject);
-
-                        jsonObject.put("goods_list", goodsArray);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    jsonArray.put(jsonObject);
-
-                    Log.i("YYY", jsonArray.toString());
+//                    JSONArray jsonArray = new JSONArray();
+//                    JSONObject jsonObject = new JSONObject();
+//                    try {
+//                        jsonObject.put("shop_id", 100001);
+//                        jsonObject.put("shop_name", "周黑鸭");
+//                        jsonObject.put("shop_photo", "100.jpg");
+//                        jsonObject.put("shop_address", "青岛市城阳区村里");
+//
+//                        JSONArray goodsArray = new JSONArray();
+//                        JSONObject goodsObject = new JSONObject();
+//                        goodsObject.put("goods_id", 100);
+//                        goodsObject.put("shop_id", 100001);
+//                        goodsObject.put("goods_name", "鸭脖");
+//                        goodsObject.put("goods_photo", "100001.jpg");
+//                        goodsObject.put("goods_price", 6.6);
+//                        goodsObject.put("goods_category", "category");
+//                        goodsObject.put("goods_sales_volume", 10);
+//                        goodsArray.put(goodsObject);
+//
+//                        jsonObject.put("goods_list", goodsArray);
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                    jsonArray.put(jsonObject);
+//
+//                    Log.i("YYY", jsonArray.toString());
                 }
             });
         }

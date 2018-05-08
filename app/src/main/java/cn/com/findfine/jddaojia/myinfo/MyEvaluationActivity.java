@@ -44,7 +44,7 @@ public class MyEvaluationActivity extends BaseActivity {
 
     private void init() {
         GoodsOrderDao goodsOrderDao = new GoodsOrderDao();
-        goodsOrderBeans = goodsOrderDao.queryEvaluationOrder();
+//        goodsOrderBeans = goodsOrderDao.queryEvaluationOrder();
         for (GoodsOrderBean goodsOrderBean : goodsOrderBeans) {
             Log.i("evaluation", goodsOrderBean.toString());
         }

@@ -12,17 +12,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
+import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
-import cn.com.findfine.jddaojia.utils.FileUtil;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 
 public class OrderDetailActivity extends BaseActivity {
 
@@ -80,34 +76,23 @@ public class OrderDetailActivity extends BaseActivity {
         });
     }
 
-    private void initGoodsList(String goodsJson, LinearLayout llOrderGoods) {
-        try {
-            JSONArray jsonArray = new JSONArray(goodsJson);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject goodsObject = jsonArray.getJSONObject(i);
-                GoodsBean goodsBean = new GoodsBean();
-                goodsBean.setGoodsId(goodsObject.getInt("goods_id"));
-                goodsBean.setGoodsName(goodsObject.getString("goods_name"));
-                goodsBean.setGoodsPhoto(goodsObject.getString("goods_photo"));
-                goodsBean.setGoodsPrice((float) goodsObject.getDouble("goods_price"));
-                goodsBean.setGoodsCartCount(goodsObject.getInt("goods_count"));
+    private void initGoodsList(List<GoodsBean> goodsBeans, LinearLayout llOrderGoods) {
+        for (int i = 0; i < goodsBeans.size(); i++) {
+            GoodsBean goodsBean = goodsBeans.get(i);
+            goodsBean.setGoodsCartCount(1);
 
-                goodsPrice += goodsBean.getGoodsPrice() * goodsBean.getGoodsCartCount();
+            goodsPrice += goodsBean.getGoodsPrice() * goodsBean.getGoodsCartCount();
 
-                View view = LayoutInflater.from(this).inflate(R.layout.item_order_detail_goods, null, false);
-                ImageView ivGoodsPhoto = view.findViewById(R.id.iv_goods_photo);
-                TextView tvGoodsName = view.findViewById(R.id.tv_goods_name);
-                TextView tvGoodsPriceAndCount = view.findViewById(R.id.tv_goods_price_and_count);
-                TextView tvGoodsPrice = view.findViewById(R.id.tv_goods_price);
-                File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-                Glide.with(this).load(file).into(ivGoodsPhoto);
-                tvGoodsName.setText(goodsBean.getGoodsName());
-                tvGoodsPrice.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()));
-                tvGoodsPriceAndCount.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()) + " X " + String.valueOf(goodsBean.getGoodsCartCount()));
-                llOrderGoods.addView(view);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
+            View view = LayoutInflater.from(this).inflate(R.layout.item_order_detail_goods, null, false);
+            ImageView ivGoodsPhoto = view.findViewById(R.id.iv_goods_photo);
+            TextView tvGoodsName = view.findViewById(R.id.tv_goods_name);
+            TextView tvGoodsPriceAndCount = view.findViewById(R.id.tv_goods_price_and_count);
+            TextView tvGoodsPrice = view.findViewById(R.id.tv_goods_price);
+            Glide.with(this).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(ivGoodsPhoto);
+            tvGoodsName.setText(goodsBean.getGoodsName());
+            tvGoodsPrice.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()));
+            tvGoodsPriceAndCount.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()) + " X " + String.valueOf(goodsBean.getGoodsCartCount()));
+            llOrderGoods.addView(view);
         }
     }
 }

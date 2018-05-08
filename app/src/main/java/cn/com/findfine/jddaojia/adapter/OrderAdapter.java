@@ -12,19 +12,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.order.OrderDetailActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> {
@@ -52,10 +46,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
         GoodsOrderBean goodsOrderBean = goodsOrderBeans.get(position);
         holder.shopName.setText(goodsOrderBean.getShopName());
 
-        List<GoodsBean> goodsBeanList = getGoodsBeanList(goodsOrderBean.getGoodsArray());
+        List<GoodsBean> goodsBeanList = goodsOrderBean.getGoodsArray();
         GoodsBean goodsBean = goodsBeanList.get(0);
-        File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-        Glide.with(context).load(file).into(holder.ivGoodsPhoto_1);
+        Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_1);
         holder.tvGoodsPrice_1.setText(String.valueOf(goodsBean.getGoodsPrice()));
 
         if (goodsBeanList.size() > 1) {
@@ -63,8 +56,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.tvGoodsPrice_2.setVisibility(View.VISIBLE);
 
             goodsBean = goodsBeanList.get(1);
-            file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(context).load(file).into(holder.ivGoodsPhoto_2);
+            Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_2);
             holder.tvGoodsPrice_2.setText(String.valueOf(goodsBean.getGoodsPrice()));
         } else {
             holder.ivGoodsPhoto_2.setVisibility(View.INVISIBLE);
@@ -76,8 +68,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.tvGoodsPrice_3.setVisibility(View.VISIBLE);
 
             goodsBean = goodsBeanList.get(2);
-            file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(context).load(file).into(holder.ivGoodsPhoto_3);
+            Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_3);
             holder.tvGoodsPrice_3.setText(String.valueOf(goodsBean.getGoodsPrice()));
         } else {
             holder.ivGoodsPhoto_3.setVisibility(View.INVISIBLE);
@@ -89,8 +80,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             holder.tvGoodsPrice_4.setVisibility(View.VISIBLE);
 
             goodsBean = goodsBeanList.get(3);
-            file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(context).load(file).into(holder.ivGoodsPhoto_4);
+            Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_4);
             holder.tvGoodsPrice_4.setText(String.valueOf(goodsBean.getGoodsPrice()));
         } else {
             holder.ivGoodsPhoto_4.setVisibility(View.INVISIBLE);
@@ -100,29 +90,32 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
+        if (goodsOrderBeans == null) {
+            return 0;
+        }
         return goodsOrderBeans.size();
     }
 
-    private List<GoodsBean> getGoodsBeanList(String goodsJson) {
-        List<GoodsBean> goodsBeans = new ArrayList<>();
-        try {
-            JSONArray jsonArray = new JSONArray(goodsJson);
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject goodsObject = jsonArray.getJSONObject(i);
-                GoodsBean goodsBean = new GoodsBean();
-                goodsBean.setGoodsId(goodsObject.getInt("goods_id"));
-                goodsBean.setGoodsName(goodsObject.getString("goods_name"));
-                goodsBean.setGoodsPhoto(goodsObject.getString("goods_photo"));
-                goodsBean.setGoodsPrice((float) goodsObject.getDouble("goods_price"));
-                goodsBean.setGoodsCartCount(goodsObject.getInt("goods_count"));
-
-                goodsBeans.add(goodsBean);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return goodsBeans;
-    }
+//    private List<GoodsBean> getGoodsBeanList(String goodsJson) {
+//        List<GoodsBean> goodsBeans = new ArrayList<>();
+//        try {
+//            JSONArray jsonArray = new JSONArray(goodsJson);
+//            for (int i = 0; i < jsonArray.length(); i++) {
+//                JSONObject goodsObject = jsonArray.getJSONObject(i);
+//                GoodsBean goodsBean = new GoodsBean();
+//                goodsBean.setGoodsId(goodsObject.getInt("goods_id"));
+//                goodsBean.setGoodsName(goodsObject.getString("goods_name"));
+//                goodsBean.setGoodsPhoto(goodsObject.getString("goods_photo"));
+//                goodsBean.setGoodsPrice((float) goodsObject.getDouble("goods_price"));
+//                goodsBean.setGoodsCartCount(goodsObject.getInt("goods_count"));
+//
+//                goodsBeans.add(goodsBean);
+//            }
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return goodsBeans;
+//    }
 
     class ViewHolder extends RecyclerView.ViewHolder {
 

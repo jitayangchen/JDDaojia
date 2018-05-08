@@ -12,14 +12,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShoppingCartShopBean;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.shopcart.ShopCartActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 
 
 public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartShopAdapter.ViewHolder> {
@@ -50,8 +49,7 @@ public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartSh
 
         List<GoodsBean> goodsBeanList = shoppingCartShopBean.getGoodsBeanList();
         GoodsBean goodsBean = goodsBeanList.get(0);
-        File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-        Glide.with(context).load(file).into(holder.ivGoodsPhoto_1);
+        Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_1);
         holder.tvGoodsPrice_1.setText(String.valueOf(goodsBean.getGoodsPrice()));
 
         if (goodsBeanList.size() > 1) {
@@ -59,8 +57,7 @@ public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartSh
             holder.tvGoodsPrice_2.setVisibility(View.VISIBLE);
 
             goodsBean = goodsBeanList.get(1);
-            file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(context).load(file).into(holder.ivGoodsPhoto_2);
+            Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_2);
             holder.tvGoodsPrice_2.setText(String.valueOf(goodsBean.getGoodsPrice()));
         } else {
             holder.ivGoodsPhoto_2.setVisibility(View.INVISIBLE);
@@ -72,8 +69,7 @@ public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartSh
             holder.tvGoodsPrice_3.setVisibility(View.VISIBLE);
 
             goodsBean = goodsBeanList.get(2);
-            file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(context).load(file).into(holder.ivGoodsPhoto_3);
+            Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_3);
             holder.tvGoodsPrice_3.setText(String.valueOf(goodsBean.getGoodsPrice()));
         } else {
             holder.ivGoodsPhoto_3.setVisibility(View.INVISIBLE);
@@ -85,8 +81,7 @@ public class ShoppingCartShopAdapter extends RecyclerView.Adapter<ShoppingCartSh
             holder.tvGoodsPrice_4.setVisibility(View.VISIBLE);
 
             goodsBean = goodsBeanList.get(3);
-            file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(context).load(file).into(holder.ivGoodsPhoto_4);
+            Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto_4);
             holder.tvGoodsPrice_4.setText(String.valueOf(goodsBean.getGoodsPrice()));
         } else {
             holder.ivGoodsPhoto_4.setVisibility(View.INVISIBLE);

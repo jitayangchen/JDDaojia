@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,7 +20,12 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
@@ -26,12 +34,16 @@ import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.adapter.GoodsListAdapter;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShopBean;
-import cn.com.findfine.jddaojia.data.db.dao.GoodsDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartGoodsDao;
+import cn.com.findfine.jddaojia.http.HttpRequest;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.order.NewOrderActivity;
 import cn.com.findfine.jddaojia.shopcart.ShopCartActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 public class ShopDetialActivity extends BaseActivity implements View.OnClickListener {
 
@@ -49,7 +61,7 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
     private int cartCount = 0;
     private float cartGoodsPrice = 0;
     private GoodsListAdapter goodsListAdapter;
-    private GoodsDao goodsDao;
+//    private GoodsDao goodsDao;
     private List<GoodsBean> goodsBeans;
 
     @Override
@@ -92,19 +104,18 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
         tvGotoPay.setOnClickListener(this);
 
         rvShopGoodsList.setLayoutManager(new LinearLayoutManager(this));
-        goodsDao = new GoodsDao();
+//        goodsDao = new GoodsDao();
 
         loadData();
 
         goodsListAdapter = new GoodsListAdapter(this, shopBean.getShopName(), shopBean.getShopAddress());
-        goodsListAdapter.setGoodsBeans(goodsBeans);
+
         rvShopGoodsList.setAdapter(goodsListAdapter);
 
         ivShopPhoto = findViewById(R.id.iv_shop_photo);
         tvShopName = findViewById(R.id.tv_shop_name);
 
-        File file = new File(FileUtil.getCacheFilePath() + shopBean.getShopPhoto());
-        Glide.with(this).load(file).into(ivShopPhoto);
+        Glide.with(this).load(HttpUrl.BASE_URL + shopBean.getShopPhoto()).into(ivShopPhoto);
         tvShopName.setText(shopBean.getShopName());
 
     }
@@ -113,7 +124,46 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
         cartCount = 0;
         cartGoodsPrice = 0.0f;
 
-        goodsBeans = goodsDao.queryGoodsByShopId(shopBean.getShopId());
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("shop_id", String.valueOf(shopBean.getShopId()));
+
+        HttpRequest.requestPost("http://115.28.17.184/goods_list.php", builder, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                Log.i("Response", result);
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    JSONArray shopList = jsonObj.getJSONArray("goods_list");
+                    goodsBeans = new ArrayList<>();
+                    for (int i = 0; i < shopList.length(); i++) {
+                        JSONObject goodsObj = shopList.getJSONObject(i);
+                        GoodsBean goodsBean = new GoodsBean();
+                        goodsBean.setShopId(Integer.valueOf(goodsObj.getString("shop_id")));
+                        goodsBean.setGoodsId(Integer.valueOf(goodsObj.getString("goods_id")));
+                        goodsBean.setGoodsName(goodsObj.getString("goods_name"));
+                        goodsBean.setGoodsPhoto(goodsObj.getString("goods_photo"));
+                        goodsBean.setGoodsPrice(Float.valueOf(goodsObj.getString("goods_price")));
+
+                        goodsBeans.add(goodsBean);
+                    }
+
+                    handler.sendEmptyMessage(1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+    }
+
+    private void initData() {
         boolean loginStatus = SharedPreferencesUtil.getLoginStatus(this);
         if (loginStatus) {
             ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
@@ -140,6 +190,19 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
             setBottomStatus(false);
         }
     }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                initData();
+                goodsListAdapter.setGoodsBeans(goodsBeans);
+                goodsListAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     @Override
     public void onClick(View v) {

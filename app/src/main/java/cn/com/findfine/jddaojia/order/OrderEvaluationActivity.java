@@ -46,7 +46,7 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
 
         Intent intent = getIntent();
         orderNumber = intent.getStringExtra("order_number");
-        goodsOrderBean = goodsOrderDao.queryOrderByOrderNumber(orderNumber);
+//        goodsOrderBean = goodsOrderDao.queryOrderByOrderNumber(orderNumber);
 
         init();
     }
@@ -113,7 +113,7 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
                 }
 
                 if (orderEvaluation != 0) {
-                    goodsOrderDao.updateOrderEvaluation(orderNumber, orderEvaluation);
+//                    goodsOrderDao.updateOrderEvaluation(orderNumber, orderEvaluation);
 
                     Toast.makeText(this, "订单评价提交成功", Toast.LENGTH_SHORT).show();
                     finish();

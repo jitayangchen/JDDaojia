@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.Constant;
@@ -23,9 +22,9 @@ import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShoppingCartShopBean;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartGoodsDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartShopDao;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.login.LoginActivity;
 import cn.com.findfine.jddaojia.shop.GoodsDetialActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
 
 public class GoodsListAdapter extends RecyclerView.Adapter<GoodsListAdapter.ViewHolder> {
@@ -59,8 +58,8 @@ public class GoodsListAdapter extends RecyclerView.Adapter<GoodsListAdapter.View
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         GoodsBean goodsBean = goodsBeans.get(position);
-        File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-        Glide.with(context).load(file).into(holder.ivGoodsPhoto);
+//        File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
+        Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto);
         holder.tvGoodsName.setText(goodsBean.getGoodsName());
         holder.tvGoodsPrice.setText(String.valueOf(goodsBean.getGoodsPrice()));
         holder.tvGoodsCount.setText(String.valueOf(goodsBean.getGoodsCartCount()));
@@ -68,6 +67,9 @@ public class GoodsListAdapter extends RecyclerView.Adapter<GoodsListAdapter.View
 
     @Override
     public int getItemCount() {
+        if (goodsBeans == null) {
+            return 0;
+        }
         return goodsBeans.size();
     }
 

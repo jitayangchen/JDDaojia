@@ -4,6 +4,8 @@ package cn.com.findfine.jddaojia.data.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.List;
+
 public class GoodsOrderBean implements Parcelable {
     private int id;
     private String userId;
@@ -12,7 +14,7 @@ public class GoodsOrderBean implements Parcelable {
     private int orderStatus;
     private int shopId;
     private String shopName;
-    private String goodsArray;
+    private List<GoodsBean> goodsArray;
     private String goodsPrice;
     private String userAddress;
     private int orderEvaluation = 0;
@@ -29,7 +31,7 @@ public class GoodsOrderBean implements Parcelable {
         orderStatus = in.readInt();
         shopId = in.readInt();
         shopName = in.readString();
-        goodsArray = in.readString();
+        goodsArray = in.createTypedArrayList(GoodsBean.CREATOR);
         goodsPrice = in.readString();
         userAddress = in.readString();
         orderEvaluation = in.readInt();
@@ -103,11 +105,11 @@ public class GoodsOrderBean implements Parcelable {
         this.shopName = shopName;
     }
 
-    public String getGoodsArray() {
+    public List<GoodsBean> getGoodsArray() {
         return goodsArray;
     }
 
-    public void setGoodsArray(String goodsArray) {
+    public void setGoodsArray(List<GoodsBean> goodsArray) {
         this.goodsArray = goodsArray;
     }
 
@@ -166,7 +168,7 @@ public class GoodsOrderBean implements Parcelable {
         dest.writeInt(orderStatus);
         dest.writeInt(shopId);
         dest.writeString(shopName);
-        dest.writeString(goodsArray);
+        dest.writeTypedList(goodsArray);
         dest.writeString(goodsPrice);
         dest.writeString(userAddress);
         dest.writeInt(orderEvaluation);

@@ -95,4 +95,23 @@ public class UserAddressDao {
         cursor.close();
         return userAddressList;
     }
+
+    public List<UserAddress> queryUserAddressByUserId(String userId) {
+        List<UserAddress> userAddressList = new ArrayList<>();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        Cursor cursor = db.query(UserAddressContract.TABLE_NAME, null, UserAddressContract.USER_ID + "=?", new String[]{userId}, null, null, UserAddressContract._ID + " DESC");
+        while (cursor.moveToNext()) {
+            UserAddress userAddress = new UserAddress();
+            userAddress.setId(cursor.getInt(cursor.getColumnIndex(UserAddressContract._ID)));
+            userAddress.setUserId(cursor.getString(cursor.getColumnIndex(UserAddressContract.USER_ID)));
+            userAddress.setCity(cursor.getString(cursor.getColumnIndex(UserAddressContract.CITY)));
+            userAddress.setAddress(cursor.getString(cursor.getColumnIndex(UserAddressContract.ADDRESS)));
+            userAddress.setHouseNumber(cursor.getString(cursor.getColumnIndex(UserAddressContract.HOUSE_NUMBER)));
+            userAddress.setName(cursor.getString(cursor.getColumnIndex(UserAddressContract.NAME)));
+            userAddress.setPhoneNumber(cursor.getString(cursor.getColumnIndex(UserAddressContract.PHONE_NUMBER)));
+            userAddressList.add(userAddress);
+        }
+        cursor.close();
+        return userAddressList;
+    }
 }

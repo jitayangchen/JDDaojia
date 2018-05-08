@@ -28,7 +28,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginTop="10dp"
-            android:background="@mipmap/ic_launcher"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/iv_goods_photo_2"
             app:layout_constraintTop_toBottomOf="@id/tv_shop_name"/>

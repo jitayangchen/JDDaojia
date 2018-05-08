@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -29,16 +30,18 @@ import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.Constant;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
-import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
 import cn.com.findfine.jddaojia.data.bean.UserAddress;
-import cn.com.findfine.jddaojia.data.db.contract.GoodsOrderContract;
-import cn.com.findfine.jddaojia.data.db.dao.GoodsOrderDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartGoodsDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShoppingCartShopDao;
 import cn.com.findfine.jddaojia.data.db.dao.UserAddressDao;
+import cn.com.findfine.jddaojia.http.HttpRequest;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.myinfo.MyAddressActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 public class NewOrderActivity extends BaseActivity implements View.OnClickListener {
 
@@ -95,21 +98,9 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
         JSONArray jsonArray = new JSONArray();
         for (GoodsBean goodsBean : goodsBeans) {
             cartGoodsPrice += goodsBean.getGoodsPrice() * goodsBean.getGoodsCartCount();
-
-            JSONObject jsonObject = new JSONObject();
-            try {
-                jsonObject.put("goods_id", goodsBean.getGoodsId());
-                jsonObject.put("goods_name", goodsBean.getGoodsName());
-                jsonObject.put("goods_photo", goodsBean.getGoodsPhoto());
-                jsonObject.put("goods_price", goodsBean.getGoodsPrice());
-                jsonObject.put("goods_count", goodsBean.getGoodsCartCount());
-
-                jsonArray.put(jsonObject);
-                goodsArrayJson = jsonArray.toString();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            jsonArray.put(goodsBean.getGoodsId());
         }
+        goodsArrayJson = jsonArray.toString();
         tvPayPrice.setText("￥" + String.valueOf(cartGoodsPrice));
 
         RecyclerView rvOrderGoodsList = findViewById(R.id.rv_order_goods_list);
@@ -132,6 +123,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
             case R.id.tv_user_address:
             case R.id.tv_user_info:
                 Intent intent = new Intent(this, MyAddressActivity.class);
+                intent.putExtra("source", "new_order");
                 startActivityForResult(intent, 3000);
                 break;
         }
@@ -141,14 +133,13 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 3000 && resultCode == 3001) {
+            userAddress = data.getParcelableExtra("user_address");
             initUserAddress();
         }
     }
 
     private void initUserAddress() {
-        List<UserAddress> userAddressList = userAddressDao.queryAllUserAddressByUserId(SharedPreferencesUtil.getUserAccount(this));
-        if (userAddressList.size() > 0) {
-            userAddress = userAddressList.get(0);
+        if (userAddress != null) {
             tvUserAddress.setText(userAddress.getAddress());
 
             tvUserInfo.setVisibility(View.VISIBLE);
@@ -165,29 +156,65 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
             return ;
         }
         if (!isCreateOrder) {
-            GoodsOrderDao goodsOrderDao = new GoodsOrderDao();
-            GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
-            goodsOrderBean.setUserId(userId);
+//            GoodsOrderDao goodsOrderDao = new GoodsOrderDao();
+//            GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
+//            goodsOrderBean.setUserId(userId);
             orderNumber = String.valueOf(System.currentTimeMillis());
-            goodsOrderBean.setOrderNumber(orderNumber);
+//            goodsOrderBean.setOrderNumber(orderNumber);
 
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            goodsOrderBean.setCreateOrderTime(sdf.format(date));
-            goodsOrderBean.setOrderStatus(GoodsOrderContract.ORDER_STATUS_UNPAY);
-            goodsOrderBean.setShopId(shopId);
-            goodsOrderBean.setShopName(shopName);
-            goodsOrderBean.setGoodsArray(goodsArrayJson);
-            goodsOrderBean.setGoodsPrice(String.valueOf(cartGoodsPrice));
-            goodsOrderBean.setUserAddress(userAddress.getName() + "  " + userAddress.getPhoneNumber() + '\n' + userAddress.getAddress());
-            goodsOrderDao.insertOrder(goodsOrderBean);
+//            goodsOrderBean.setCreateOrderTime(sdf.format(date));
+//            goodsOrderBean.setOrderStatus(GoodsOrderContract.ORDER_STATUS_UNPAY);
+//            goodsOrderBean.setShopId(shopId);
+//            goodsOrderBean.setShopName(shopName);
+//            goodsOrderBean.setGoodsArray(goodsArrayJson);
+//            goodsOrderBean.setGoodsPrice(String.valueOf(cartGoodsPrice));
+//            goodsOrderBean.setUserAddress(userAddress.getName() + "  " + userAddress.getPhoneNumber() + '\n' + userAddress.getAddress());
+//            goodsOrderDao.insertOrder(goodsOrderBean);
 
 
 
-            ShoppingCartShopDao shoppingCartShopDao = new ShoppingCartShopDao();
-            shoppingCartShopDao.deleteShopCartById(userId, shopId);
-            ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
-            shoppingCartGoodsDao.deleteGoodsCartByUserIdAndShopId(userId, shopId);
+
+
+
+
+
+            FormBody.Builder builder = new FormBody.Builder();
+            builder.add("shop_id", String.valueOf(shopId));
+            builder.add("goods_id", goodsArrayJson);
+            builder.add("create_time", sdf.format(date));
+            builder.add("user_address", userAddress.getName() + "  " + userAddress.getPhoneNumber() + '\n' + userAddress.getAddress());
+            builder.add("user_id", SharedPreferencesUtil.getUserAccount(this));
+            builder.add("user_phone", SharedPreferencesUtil.getUserAccount(this));
+            Log.i("params", goodsArrayJson);
+
+            HttpRequest.requestPost("http://115.28.17.184/order_add.php", builder, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String result = response.body().string();
+                    Log.i("Response", result);
+//                    {"success":true,"message":"添加成功"}
+                    try {
+                        JSONObject jsonObj = new JSONObject(result);
+                        String success = jsonObj.getString("success");
+                        if ("true".equals(success)) {
+                            ShoppingCartShopDao shoppingCartShopDao = new ShoppingCartShopDao();
+                            shoppingCartShopDao.deleteShopCartById(userId, shopId);
+                            ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
+                            shoppingCartGoodsDao.deleteGoodsCartByUserIdAndShopId(userId, shopId);
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
             Intent intent = new Intent();
             intent.putExtra(Constant.REFRESH_SHOP_CART, true);
@@ -214,8 +241,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             GoodsBean goodsBean = goodsBeans.get(position);
-            File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-            Glide.with(NewOrderActivity.this).load(file).into(holder.ivGoodsPhoto);
+            Glide.with(NewOrderActivity.this).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto);
             holder.tvGoodsName.setText(goodsBean.getGoodsName());
             holder.tvGoodsPrice.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()));
             holder.tvGoodsPriceAndCount.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()) + " X " + String.valueOf(goodsBean.getGoodsCartCount()));

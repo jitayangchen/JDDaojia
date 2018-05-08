@@ -29,7 +29,7 @@ public class GoodsOrderDao {
         values.put(GoodsOrderContract.ORDER_STATUS, goodsOrderBean.getOrderStatus());
         values.put(GoodsOrderContract.SHOP_ID, goodsOrderBean.getShopId());
         values.put(GoodsOrderContract.SHOP_NAME, goodsOrderBean.getShopName());
-        values.put(GoodsOrderContract.GOODS_ARRAY, goodsOrderBean.getGoodsArray());
+//        values.put(GoodsOrderContract.GOODS_ARRAY, goodsOrderBean.getGoodsArray());
         values.put(GoodsOrderContract.GOODS_PRICE, goodsOrderBean.getGoodsPrice());
         values.put(GoodsOrderContract.USER_ADDRESS, goodsOrderBean.getUserAddress());
         values.put(GoodsOrderContract.ORDER_EVALUATION, goodsOrderBean.getOrderEvaluation());
@@ -70,7 +70,7 @@ public class GoodsOrderDao {
             goodsOrderBean.setOrderStatus(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_STATUS)));
             goodsOrderBean.setShopId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.SHOP_ID)));
             goodsOrderBean.setShopName(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.SHOP_NAME)));
-            goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
+//            goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
             goodsOrderBean.setGoodsPrice(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_PRICE)));
             goodsOrderBean.setUserAddress(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.USER_ADDRESS)));
             goodsOrderBean.setOrderEvaluation(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_EVALUATION)));
@@ -92,7 +92,7 @@ public class GoodsOrderDao {
             goodsOrderBean.setOrderStatus(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_STATUS)));
             goodsOrderBean.setShopId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.SHOP_ID)));
             goodsOrderBean.setShopName(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.SHOP_NAME)));
-            goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
+//            goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
             goodsOrderBean.setGoodsPrice(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_PRICE)));
             goodsOrderBean.setUserAddress(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.USER_ADDRESS)));
             goodsOrderBean.setOrderEvaluation(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_EVALUATION)));
@@ -114,7 +114,7 @@ public class GoodsOrderDao {
             goodsOrderBean.setOrderStatus(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_STATUS)));
             goodsOrderBean.setShopId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.SHOP_ID)));
             goodsOrderBean.setShopName(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.SHOP_NAME)));
-            goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
+//            goodsOrderBean.setGoodsArray(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_ARRAY)));
             goodsOrderBean.setGoodsPrice(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.GOODS_PRICE)));
             goodsOrderBean.setUserAddress(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.USER_ADDRESS)));
             goodsOrderBean.setOrderEvaluation(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_EVALUATION)));

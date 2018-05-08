@@ -27,6 +27,11 @@ public class ShoppingCartGoodsDao {
         values.put(ShoppingCartGoodsContract.SHOP_ID, goodsBean.getShopId());
         values.put(ShoppingCartGoodsContract.GOODS_ID, goodsBean.getGoodsId());
         values.put(ShoppingCartGoodsContract.GOODS_COUNT, goodsBean.getGoodsCartCount());
+        values.put(ShoppingCartGoodsContract.GOODS_NAME, goodsBean.getGoodsName());
+        values.put(ShoppingCartGoodsContract.GOODS_PHOTO, goodsBean.getGoodsPhoto());
+        values.put(ShoppingCartGoodsContract.GOODS_PRICE, goodsBean.getGoodsPrice());
+        values.put(ShoppingCartGoodsContract.GOODS_CATEGORY, goodsBean.getGoodsCategory());
+        values.put(ShoppingCartGoodsContract.GOODS_SALES_VOLUME, goodsBean.getGoodsSalesVolume());
         long insert = db.insert(ShoppingCartGoodsContract.TABLE_NAME, null, values);
         return insert != -1;
     }
@@ -83,15 +88,19 @@ public class ShoppingCartGoodsDao {
                 ShoppingCartGoodsContract.USER_ID + "=? and "
                         + ShoppingCartGoodsContract.SHOP_ID + "=?", new String[]{userId, String.valueOf(shopId)}, null, null, ShoppingCartGoodsContract._ID + " DESC");
 
-        GoodsDao goodsDao = new GoodsDao();
         while (cursor.moveToNext()) {
 //            GoodsBean goodsBean = new GoodsBean();
-            int goodsId = cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_ID));
-            GoodsBean goodsBean = goodsDao.queryGoodsByGoodsId(goodsId);
+//            int goodsId = cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_ID));
+            GoodsBean goodsBean = new GoodsBean();
             goodsBean.setId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract._ID)));
-//            goodsBean.setShopId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.SHOP_ID)));
-//            goodsBean.setGoodsId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_ID)));
+            goodsBean.setShopId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.SHOP_ID)));
+            goodsBean.setGoodsId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_ID)));
             goodsBean.setGoodsCartCount(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_COUNT)));
+            goodsBean.setGoodsName(cursor.getString(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_NAME)));
+            goodsBean.setGoodsPhoto(cursor.getString(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_PHOTO)));
+            goodsBean.setGoodsPrice(cursor.getFloat(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_PRICE)));
+            goodsBean.setGoodsCategory(cursor.getString(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_CATEGORY)));
+            goodsBean.setGoodsSalesVolume(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_SALES_VOLUME)));
             goodsBeans.add(goodsBean);
         }
         cursor.close();
@@ -112,6 +121,11 @@ public class ShoppingCartGoodsDao {
             goodsBean.setShopId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.SHOP_ID)));
             goodsBean.setGoodsId(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_ID)));
             goodsBean.setGoodsCartCount(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_COUNT)));
+            goodsBean.setGoodsName(cursor.getString(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_NAME)));
+            goodsBean.setGoodsPhoto(cursor.getString(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_PHOTO)));
+            goodsBean.setGoodsPrice(cursor.getFloat(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_PRICE)));
+            goodsBean.setGoodsCategory(cursor.getString(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_CATEGORY)));
+            goodsBean.setGoodsSalesVolume(cursor.getInt(cursor.getColumnIndex(ShoppingCartGoodsContract.GOODS_SALES_VOLUME)));
         }
         cursor.close();
         return goodsBean;

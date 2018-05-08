@@ -24,6 +24,7 @@ public class MyAddressActivity extends BaseActivity implements View.OnClickListe
     private AddressAdapter addressAdapter;
     private UserAddressDao userAddressDao;
     private String userId;
+    private String source;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,10 @@ public class MyAddressActivity extends BaseActivity implements View.OnClickListe
         userAddressDao = new UserAddressDao();
 
         userId = SharedPreferencesUtil.getUserAccount(this);
+
+        Intent intent = getIntent();
+        source = intent.getStringExtra("source");
+
         init();
     }
 
@@ -106,10 +111,17 @@ public class MyAddressActivity extends BaseActivity implements View.OnClickListe
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(MyAddressActivity.this, CreateAddressActivity.class);
-                    intent.putExtra("is_edit_address", true);
-                    intent.putExtra("user_address", userAddresses.get(getLayoutPosition()));
-                    startActivityForResult(intent, 1000);
+                    if ("new_order".equals(source)) {
+                        Intent intent = new Intent();
+                        intent.putExtra("user_address", userAddresses.get(getLayoutPosition()));
+                        setResult(3001, intent);
+                        finish();
+                    } else {
+                        Intent intent = new Intent(MyAddressActivity.this, CreateAddressActivity.class);
+                        intent.putExtra("is_edit_address", true);
+                        intent.putExtra("user_address", userAddresses.get(getLayoutPosition()));
+                        startActivityForResult(intent, 1000);
+                    }
                 }
             });
         }
@@ -122,8 +134,6 @@ public class MyAddressActivity extends BaseActivity implements View.OnClickListe
         if (requestCode == 1000 && resultCode == 2000) {
             userAddresses = userAddressDao.queryAllUserAddressByUserId(userId);
             addressAdapter.notifyDataSetChanged();
-
-            setResult(3001);
         }
     }
 }

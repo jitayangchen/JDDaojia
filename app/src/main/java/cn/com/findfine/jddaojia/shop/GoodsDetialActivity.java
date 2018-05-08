@@ -8,12 +8,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
-
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
-import cn.com.findfine.jddaojia.utils.FileUtil;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 
 public class GoodsDetialActivity extends BaseActivity {
 
@@ -39,8 +37,7 @@ public class GoodsDetialActivity extends BaseActivity {
         TextView tvGoodsName = findViewById(R.id.tv_goods_name);
         TextView tvGoodsPrice = findViewById(R.id.tv_goods_price);
         TextView tvShopName = findViewById(R.id.tv_shop_name);
-        File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-        Glide.with(this).load(file).into(ivGoodsPhoto);
+        Glide.with(this).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(ivGoodsPhoto);
 
         tvGoodsName.setText(goodsBean.getGoodsName());
         tvGoodsPrice.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()));
