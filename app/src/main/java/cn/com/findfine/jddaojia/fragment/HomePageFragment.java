@@ -40,6 +40,7 @@ import okhttp3.Response;
 public class HomePageFragment extends Fragment {
 
     private HomePageAdapter homePageAdapter;
+    private SwipeRefreshLayout srlHomePage;
 
     public HomePageFragment() {
     }
@@ -86,79 +87,38 @@ public class HomePageFragment extends Fragment {
         });
 
 
-        final SwipeRefreshLayout srlHomePage = view.findViewById(R.id.srl_home_page);
+        srlHomePage = view.findViewById(R.id.srl_home_page);
         srlHomePage.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 Log.i("SRL", "=== onRefresh ===");
-                srlHomePage.setRefreshing(false);
+                requestData();
             }
         });
 
 
 
-        tvLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                HttpRequest.requestGet("https://www.baidu.com/", new Callback() {
-//                    @Override
-//                    public void onFailure(Call call, IOException e) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onResponse(Call call, Response response) throws IOException {
-//
-//                    }
-//                });
-
-                FormBody.Builder builder = new FormBody.Builder();
-//                    .add("token", "7562901a1807841e42b8fb60fc0cad9f5af037411aa662.35496722")
-//                    .add("m", "search")
-//                    .add("a", "getrankuser")
-//                    .add("c", "rank")
-//                    .add("uid", "119834721")
-//                    .add("isJailbreak", "0");
-
-                HttpRequest.requestPost("http://115.28.17.184/shop_list.php", builder, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String result = response.body().string();
-                        Log.i("Response", result);
-                        try {
-                            JSONObject jsonObj = new JSONObject(result);
-                            JSONArray shopList = jsonObj.getJSONArray("shop_list");
-                            for (int i = 0; i < shopList.length(); i++) {
-
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                });
-            }
-        });
+//        tvLocation.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                requestData();
+//            }
+//        });
 
 
+        requestData();
 
+        return view;
+    }
 
+    private void requestData() {
         FormBody.Builder builder = new FormBody.Builder();
-//                    .add("token", "7562901a1807841e42b8fb60fc0cad9f5af037411aa662.35496722")
-//                    .add("m", "search")
-//                    .add("a", "getrankuser")
-//                    .add("c", "rank")
-//                    .add("uid", "119834721")
-//                    .add("isJailbreak", "0");
 
-        HttpRequest.requestPost("http://115.28.17.184/shop_list.php", builder, new Callback() {
+        HttpRequest.requestPost("shop_list.php", builder, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
+                handler.sendEmptyMessage(1);
             }
 
             @Override
@@ -187,7 +147,6 @@ public class HomePageFragment extends Fragment {
                 }
             }
         });
-        return view;
     }
 
     private Handler handler = new Handler() {
@@ -196,6 +155,7 @@ public class HomePageFragment extends Fragment {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
+                srlHomePage.setRefreshing(false);
                 homePageAdapter.notifyDataSetChanged();
             }
         }

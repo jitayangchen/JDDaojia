@@ -12,6 +12,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
@@ -43,6 +46,7 @@ public class OrderDetailActivity extends BaseActivity {
 
         Intent intent = getIntent();
         goodsOrderBean = intent.getParcelableExtra("goods_order_bean");
+
         init();
     }
 
@@ -57,7 +61,15 @@ public class OrderDetailActivity extends BaseActivity {
 
         tvShopNameAddress.setText(goodsOrderBean.getShopName());
         tvUserAddress.setText(goodsOrderBean.getUserAddress());
-        tvOrderNumber.setText(goodsOrderBean.getOrderNumber());
+
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date date = sdf.parse(goodsOrderBean.getCreateOrderTime());
+            tvOrderNumber.setText(String.valueOf(date.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         tvOrderTime.setText(goodsOrderBean.getCreateOrderTime());
 
         initGoodsList(goodsOrderBean.getGoodsArray(), llOrderGoods);
@@ -70,10 +82,14 @@ public class OrderDetailActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OrderDetailActivity.this, OrderEvaluationActivity.class);
-                intent.putExtra("order_number", goodsOrderBean.getOrderNumber());
+                intent.putExtra("order_bean", goodsOrderBean);
                 startActivity(intent);
             }
         });
+
+        if (goodsOrderBean.getOrderEvaluation() > 0) {
+            btnOrderEvaluation.setVisibility(View.GONE);
+        }
     }
 
     private void initGoodsList(List<GoodsBean> goodsBeans, LinearLayout llOrderGoods) {

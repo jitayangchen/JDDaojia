@@ -2,6 +2,8 @@ package cn.com.findfine.jddaojia.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,6 +52,8 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
     private float cartGoodsPrice = 0.0f;
     private UserAddress userAddress;
     private String goodsArrayJson;
+    private String goodsIdArray;
+    private String goodsCountArray;
     private boolean isCreateOrder = false;
     private String orderNumber;
     private String userId;
@@ -95,12 +99,17 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
 
         TextView tvPayPrice = findViewById(R.id.tv_pay_price);
 
-        JSONArray jsonArray = new JSONArray();
+        JSONArray jsonArrayGoodsId = new JSONArray();
+        JSONArray jsonArrayGoodsCount = new JSONArray();
         for (GoodsBean goodsBean : goodsBeans) {
             cartGoodsPrice += goodsBean.getGoodsPrice() * goodsBean.getGoodsCartCount();
-            jsonArray.put(goodsBean.getGoodsId());
+
+            jsonArrayGoodsId.put(goodsBean.getGoodsId());
+            jsonArrayGoodsCount.put(goodsBean.getGoodsCartCount());
         }
-        goodsArrayJson = jsonArray.toString();
+        goodsIdArray = jsonArrayGoodsId.toString();
+        goodsCountArray = jsonArrayGoodsCount.toString();
+
         tvPayPrice.setText("￥" + String.valueOf(cartGoodsPrice));
 
         RecyclerView rvOrderGoodsList = findViewById(R.id.rv_order_goods_list);
@@ -156,40 +165,24 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
             return ;
         }
         if (!isCreateOrder) {
-//            GoodsOrderDao goodsOrderDao = new GoodsOrderDao();
-//            GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
-//            goodsOrderBean.setUserId(userId);
             orderNumber = String.valueOf(System.currentTimeMillis());
-//            goodsOrderBean.setOrderNumber(orderNumber);
 
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//            goodsOrderBean.setCreateOrderTime(sdf.format(date));
-//            goodsOrderBean.setOrderStatus(GoodsOrderContract.ORDER_STATUS_UNPAY);
-//            goodsOrderBean.setShopId(shopId);
-//            goodsOrderBean.setShopName(shopName);
-//            goodsOrderBean.setGoodsArray(goodsArrayJson);
-//            goodsOrderBean.setGoodsPrice(String.valueOf(cartGoodsPrice));
-//            goodsOrderBean.setUserAddress(userAddress.getName() + "  " + userAddress.getPhoneNumber() + '\n' + userAddress.getAddress());
-//            goodsOrderDao.insertOrder(goodsOrderBean);
-
-
-
-
-
-
-
 
             FormBody.Builder builder = new FormBody.Builder();
             builder.add("shop_id", String.valueOf(shopId));
-            builder.add("goods_id", goodsArrayJson);
+            builder.add("goods_id", goodsIdArray);
+            builder.add("goods_count", goodsCountArray);
             builder.add("create_time", sdf.format(date));
             builder.add("user_address", userAddress.getName() + "  " + userAddress.getPhoneNumber() + '\n' + userAddress.getAddress());
-            builder.add("user_id", SharedPreferencesUtil.getUserAccount(this));
+            builder.add("user_id", SharedPreferencesUtil.getUserId(this));
             builder.add("user_phone", SharedPreferencesUtil.getUserAccount(this));
-            Log.i("params", goodsArrayJson);
+            builder.add("order_status", "2");
+            Log.i("goodsIdArray", goodsIdArray);
+            Log.i("goodsCountArray", goodsCountArray);
 
-            HttpRequest.requestPost("http://115.28.17.184/order_add.php", builder, new Callback() {
+            HttpRequest.requestPost("order_add.php", builder, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
@@ -208,6 +201,8 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
                             shoppingCartShopDao.deleteShopCartById(userId, shopId);
                             ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
                             shoppingCartGoodsDao.deleteGoodsCartByUserIdAndShopId(userId, shopId);
+
+                            handler.sendEmptyMessage(1);
                         }
 
                     } catch (JSONException e) {
@@ -223,10 +218,6 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
             isCreateOrder = true;
         }
 
-        Intent intent = new Intent(this, PayActivity.class);
-        intent.putExtra("price", cartGoodsPrice);
-        intent.putExtra("order_number", orderNumber);
-        startActivity(intent);
     }
 
     class ShopCartAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -271,4 +262,18 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
         }
 
     }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                Intent intent = new Intent(NewOrderActivity.this, PayActivity.class);
+                intent.putExtra("price", cartGoodsPrice);
+                intent.putExtra("order_id", String.valueOf(shopId));
+                startActivity(intent);
+            }
+        }
+    };
 }

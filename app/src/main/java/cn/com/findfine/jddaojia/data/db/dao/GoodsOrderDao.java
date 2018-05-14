@@ -26,7 +26,7 @@ public class GoodsOrderDao {
         values.put(GoodsOrderContract.USER_ID, goodsOrderBean.getUserId());
         values.put(GoodsOrderContract.ORDER_NUMBER, goodsOrderBean.getOrderNumber());
         values.put(GoodsOrderContract.CREATE_ORDER_TIME, goodsOrderBean.getCreateOrderTime());
-        values.put(GoodsOrderContract.ORDER_STATUS, goodsOrderBean.getOrderStatus());
+//        values.put(GoodsOrderContract.ORDER_STATUS, goodsOrderBean.getOrderStatus());
         values.put(GoodsOrderContract.SHOP_ID, goodsOrderBean.getShopId());
         values.put(GoodsOrderContract.SHOP_NAME, goodsOrderBean.getShopName());
 //        values.put(GoodsOrderContract.GOODS_ARRAY, goodsOrderBean.getGoodsArray());
@@ -64,7 +64,7 @@ public class GoodsOrderDao {
         Cursor cursor = db.query(GoodsOrderContract.TABLE_NAME, null, GoodsOrderContract.USER_ID + "=?", new String[]{userId}, null, null, GoodsOrderContract._ID + " DESC");
         while (cursor.moveToNext()) {
             GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
-            goodsOrderBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract._ID)));
+//            goodsOrderBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract._ID)));
             goodsOrderBean.setOrderNumber(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.ORDER_NUMBER)));
             goodsOrderBean.setCreateOrderTime(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.CREATE_ORDER_TIME)));
             goodsOrderBean.setOrderStatus(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_STATUS)));
@@ -86,7 +86,7 @@ public class GoodsOrderDao {
         GoodsOrderBean goodsOrderBean = null;
         if (cursor.moveToNext()) {
             goodsOrderBean = new GoodsOrderBean();
-            goodsOrderBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract._ID)));
+//            goodsOrderBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract._ID)));
             goodsOrderBean.setOrderNumber(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.ORDER_NUMBER)));
             goodsOrderBean.setCreateOrderTime(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.CREATE_ORDER_TIME)));
             goodsOrderBean.setOrderStatus(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract.ORDER_STATUS)));
@@ -107,7 +107,7 @@ public class GoodsOrderDao {
         Cursor cursor = db.query(GoodsOrderContract.TABLE_NAME, null, GoodsOrderContract.ORDER_EVALUATION + ">?", new String[]{"0"}, null, null, GoodsOrderContract._ID + " DESC");
         while (cursor.moveToNext()) {
             GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
-            goodsOrderBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract._ID)));
+//            goodsOrderBean.setId(cursor.getInt(cursor.getColumnIndex(GoodsOrderContract._ID)));
             goodsOrderBean.setUserId(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.USER_ID)));
             goodsOrderBean.setOrderNumber(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.ORDER_NUMBER)));
             goodsOrderBean.setCreateOrderTime(cursor.getString(cursor.getColumnIndex(GoodsOrderContract.CREATE_ORDER_TIME)));

@@ -127,7 +127,7 @@ public class ShopDetialActivity extends BaseActivity implements View.OnClickList
         FormBody.Builder builder = new FormBody.Builder();
         builder.add("shop_id", String.valueOf(shopBean.getShopId()));
 
-        HttpRequest.requestPost("http://115.28.17.184/goods_list.php", builder, new Callback() {
+        HttpRequest.requestPost("goods_list.php", builder, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 

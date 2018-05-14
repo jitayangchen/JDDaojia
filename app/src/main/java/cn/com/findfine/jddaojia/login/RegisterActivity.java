@@ -102,7 +102,7 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
         builder.add("user_account", userAccount);
         builder.add("password", password);
 
-        HttpRequest.requestPost("http://115.28.17.184/user_register.php", builder, new Callback() {
+        HttpRequest.requestPost("user_register.php", builder, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -117,6 +117,40 @@ public class RegisterActivity extends BaseActivity implements View.OnClickListen
                     JSONObject jsonObj = new JSONObject(result);
                     String success = jsonObj.getString("success");
                     if ("true".equals(success)) {
+                        login();
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void login() {
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("user_account", userAccount);
+        builder.add("password", password);
+
+        HttpRequest.requestPost("user_login.php", builder, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+//                {"success":true,"message":"登陆成功","data":{"id":"5","username":"15501005429","password":"123456"}}
+                Log.i("Response", result);
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    String success = jsonObj.getString("success");
+                    if ("true".equals(success)) {
+
+                        JSONObject dataObj = jsonObj.getJSONObject("data");
+                        String userId = dataObj.getString("id");
+                        SharedPreferencesUtil.saveUserId(RegisterActivity.this, userId);
+
                         handler.sendEmptyMessage(1);
                     }
                 } catch (JSONException e) {

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +29,6 @@ import java.util.List;
 import cn.com.findfine.jddaojia.Constant;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.adapter.OrderAdapter;
-import cn.com.findfine.jddaojia.data.JsonData;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
 import cn.com.findfine.jddaojia.http.HttpRequest;
@@ -48,6 +48,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
     private OrderAdapter orderAdapter;
     private boolean isRefreshOrder = false;
     private RecyclerView rvOrderGoodsList;
+    private SwipeRefreshLayout srlOrderPage;
 
     public OrderFragment() {
     }
@@ -73,6 +74,15 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         Toolbar toolbar = view.findViewById(R.id.toolbar);
         toolbar.setTitle("我的订单");
 
+
+        srlOrderPage = view.findViewById(R.id.srl_order_page);
+        srlOrderPage.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i("SRL", "=== onRefresh ===");
+                refreshOrder();
+            }
+        });
 
         btnLogin = view.findViewById(R.id.btn_login);
         btnLogin.setOnClickListener(this);
@@ -108,9 +118,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 
     private void refreshOrder() {
         FormBody.Builder builder = new FormBody.Builder();
-        builder.add("user_id", SharedPreferencesUtil.getUserAccount(getContext()));
+        builder.add("user_id", SharedPreferencesUtil.getUserId(getContext()));
 
-        HttpRequest.requestPost("http://115.28.17.184/order_list.php", builder, new Callback() {
+        HttpRequest.requestPost("order_list.php", builder, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -120,21 +130,27 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
                 Log.i("Response", result);
-                result = JsonData.ORDER_DATA;
+//                result = JsonData.ORDER_DATA;
                 try {
                     List<GoodsOrderBean> goodsOrderBeans = new ArrayList<>();
                     JSONArray jsonArray = new JSONArray(result);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
                         GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
-                        goodsOrderBean.setId(Integer.valueOf(jsonObject.getString("order_id")));
+                        goodsOrderBean.setOrderId(jsonObject.getString("order_id"));
                         goodsOrderBean.setOrderNumber(jsonObject.getString("order_number"));
                         goodsOrderBean.setCreateOrderTime(jsonObject.getString("create_order_time"));
                         goodsOrderBean.setOrderStatus(Integer.valueOf(jsonObject.getString("order_status")));
                         goodsOrderBean.setShopId(Integer.valueOf(jsonObject.getString("shop_id")));
-                        // TODO
-                        goodsOrderBean.setShopName(jsonObject.getString("user_address"));
+                        goodsOrderBean.setShopName(jsonObject.getString("shop_name"));
                         goodsOrderBean.setUserAddress(jsonObject.getString("user_address"));
+                        String orderEvalution = jsonObject.getString("order_evalution");
+                        if ("null".equals(orderEvalution)) {
+                            goodsOrderBean.setOrderEvaluation(0);
+                        } else {
+                            goodsOrderBean.setOrderEvaluation(Integer.valueOf(orderEvalution));
+                        }
+                        goodsOrderBean.setEvalutionContent(jsonObject.getString("evalution_content"));
 
 
                         List<GoodsBean> goodsBeans = new ArrayList<>();
@@ -151,7 +167,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
 
                         goodsOrderBean.setGoodsArray(goodsBeans);
 
-                        goodsOrderBeans.add(goodsOrderBean);
+                        goodsOrderBeans.add(0, goodsOrderBean);
                     }
 
                     orderAdapter.setGoodsOrderBeans(goodsOrderBeans);
@@ -197,6 +213,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             if (msg.what == 1) {
+                srlOrderPage.setRefreshing(false);
                 orderAdapter.notifyDataSetChanged();
             }
         }

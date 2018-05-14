@@ -46,7 +46,6 @@
             android:id="@+id/iv_goods_photo_2"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/ic_launcher"
             app:layout_constraintTop_toTopOf="@id/iv_goods_photo_1"
             app:layout_constraintStart_toEndOf="@id/iv_goods_photo_1"
             app:layout_constraintEnd_toStartOf="@id/iv_goods_photo_3"
@@ -66,7 +65,6 @@
             android:id="@+id/iv_goods_photo_3"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:background="@mipmap/ic_launcher"
             android:visibility="invisible"
             app:layout_constraintTop_toTopOf="@id/iv_goods_photo_1"
             app:layout_constraintStart_toEndOf="@id/iv_goods_photo_2"
@@ -87,7 +85,6 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:visibility="invisible"
-            android:background="@mipmap/ic_launcher"
             app:layout_constraintTop_toTopOf="@id/iv_goods_photo_1"
             app:layout_constraintStart_toEndOf="@id/iv_goods_photo_3"
             app:layout_constraintEnd_toEndOf="parent"/>

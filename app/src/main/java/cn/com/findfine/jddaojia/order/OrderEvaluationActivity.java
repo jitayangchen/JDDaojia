@@ -2,28 +2,37 @@ package cn.com.findfine.jddaojia.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
-import cn.com.findfine.jddaojia.data.db.dao.GoodsOrderDao;
+import cn.com.findfine.jddaojia.http.HttpRequest;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 public class OrderEvaluationActivity extends BaseActivity implements View.OnClickListener {
 
     private List<ImageView> imageViews;
     private TextView tvEvaluationResult;
-    private String orderNumber;
     private int orderEvaluation = 0;
-    private GoodsOrderDao goodsOrderDao;
     private GoodsOrderBean goodsOrderBean;
 
     @Override
@@ -42,11 +51,9 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
             }
         });
 
-        goodsOrderDao = new GoodsOrderDao();
 
         Intent intent = getIntent();
-        orderNumber = intent.getStringExtra("order_number");
-//        goodsOrderBean = goodsOrderDao.queryOrderByOrderNumber(orderNumber);
+        goodsOrderBean = intent.getParcelableExtra("order_bean");
 
         init();
     }
@@ -109,17 +116,45 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
                 break;
             case R.id.btn_commit_evaluation:
                 if (goodsOrderBean.getOrderEvaluation() > 0) {
+                    Toast.makeText(OrderEvaluationActivity.this, "你已经评价了", Toast.LENGTH_SHORT).show();
                     return ;
                 }
 
                 if (orderEvaluation != 0) {
-//                    goodsOrderDao.updateOrderEvaluation(orderNumber, orderEvaluation);
-
-                    Toast.makeText(this, "订单评价提交成功", Toast.LENGTH_SHORT).show();
-                    finish();
+                    commitOrderEvaluation(orderEvaluation);
                 }
                 break;
         }
+    }
+
+    private void commitOrderEvaluation(int orderEvaluation) {
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("order_id", goodsOrderBean.getOrderId());
+        builder.add("order_evalution", String.valueOf(orderEvaluation));
+        builder.add("evaluation_content", "非常满意，好好好");
+
+        HttpRequest.requestPost("order_evalution.php", builder, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                Log.i("Response", result);
+                try {
+                    JSONObject jsonObj = new JSONObject(result);
+                    String success = jsonObj.getString("success");
+                    if ("true".equals(success)) {
+                        handler.sendEmptyMessage(1);
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void setStarStatus(int evaluation) {
@@ -131,4 +166,16 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
             imageViews.get(i).setBackgroundResource(R.mipmap.order_star);
         }
     }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                Toast.makeText(OrderEvaluationActivity.this, "订单评价提交成功", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    };
 }

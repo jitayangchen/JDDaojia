@@ -1,6 +1,8 @@
 package cn.com.findfine.jddaojia.myinfo;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,16 +14,29 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
+import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
-import cn.com.findfine.jddaojia.data.db.dao.GoodsOrderDao;
+import cn.com.findfine.jddaojia.http.HttpRequest;
+import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 public class MyEvaluationActivity extends BaseActivity {
 
     private List<GoodsOrderBean> goodsOrderBeans;
+    private MyEvaluationAdapter myEvaluationAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,18 +58,95 @@ public class MyEvaluationActivity extends BaseActivity {
     }
 
     private void init() {
-        GoodsOrderDao goodsOrderDao = new GoodsOrderDao();
-//        goodsOrderBeans = goodsOrderDao.queryEvaluationOrder();
-        for (GoodsOrderBean goodsOrderBean : goodsOrderBeans) {
-            Log.i("evaluation", goodsOrderBean.toString());
-        }
-
+        getOrderData();
 
         RecyclerView rvMyEvaluation = findViewById(R.id.rv_my_evaluation);
         rvMyEvaluation.setLayoutManager(new LinearLayoutManager(this));
-        rvMyEvaluation.setAdapter(new MyEvaluationAdapter());
+        myEvaluationAdapter = new MyEvaluationAdapter();
+        rvMyEvaluation.setAdapter(myEvaluationAdapter);
 
     }
+
+    public void getOrderData() {
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("user_id", SharedPreferencesUtil.getUserId(this));
+
+        HttpRequest.requestPost("order_list.php", builder, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                Log.i("Response", result);
+//                result = JsonData.ORDER_DATA;
+                try {
+                    if (goodsOrderBeans == null) {
+                        goodsOrderBeans = new ArrayList<>();
+                    }
+                    goodsOrderBeans.clear();
+
+                    JSONArray jsonArray = new JSONArray(result);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        GoodsOrderBean goodsOrderBean = new GoodsOrderBean();
+                        goodsOrderBean.setOrderId(jsonObject.getString("order_id"));
+                        goodsOrderBean.setOrderNumber(jsonObject.getString("order_number"));
+                        goodsOrderBean.setCreateOrderTime(jsonObject.getString("create_order_time"));
+                        goodsOrderBean.setOrderStatus(Integer.valueOf(jsonObject.getString("order_status")));
+                        goodsOrderBean.setShopId(Integer.valueOf(jsonObject.getString("shop_id")));
+                        goodsOrderBean.setShopName(jsonObject.getString("shop_name"));
+                        goodsOrderBean.setUserAddress(jsonObject.getString("user_address"));
+                        String orderEvalution = jsonObject.getString("order_evalution");
+                        if ("null".equals(orderEvalution)) {
+                            goodsOrderBean.setOrderEvaluation(0);
+                        } else {
+                            goodsOrderBean.setOrderEvaluation(Integer.valueOf(orderEvalution));
+
+                            goodsOrderBean.setEvalutionContent(jsonObject.getString("evalution_content"));
+
+
+                            List<GoodsBean> goodsBeans = new ArrayList<>();
+                            JSONArray goodsListArray = jsonObject.getJSONArray("goods_list");
+                            for (int j = 0; j < goodsListArray.length(); j++) {
+                                JSONObject goodsObj = goodsListArray.getJSONObject(j);
+                                GoodsBean goodsBean = new GoodsBean();
+                                goodsBean.setGoodsId(Integer.valueOf(goodsObj.getString("goods_id")));
+                                goodsBean.setGoodsName(goodsObj.getString("goods_name"));
+                                goodsBean.setGoodsPhoto(goodsObj.getString("goods_photo"));
+                                goodsBean.setGoodsPrice(Float.valueOf(goodsObj.getString("goods_price")));
+                                goodsBeans.add(goodsBean);
+                            }
+
+                            goodsOrderBean.setGoodsArray(goodsBeans);
+
+                            goodsOrderBeans.add(0, goodsOrderBean);
+                        }
+
+                    }
+
+
+                    handler.sendEmptyMessage(1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                myEvaluationAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 
     class MyEvaluationAdapter extends RecyclerView.Adapter<ViewHolder> {
 
@@ -101,6 +193,9 @@ public class MyEvaluationActivity extends BaseActivity {
 
         @Override
         public int getItemCount() {
+            if (goodsOrderBeans == null) {
+                return 0;
+            }
             return goodsOrderBeans.size();
         }
     }

@@ -31,7 +31,7 @@ public class HttpRequest {
         RequestBody body = builder.build();
 
         Request request = new Request.Builder()
-                .url(url)
+                .url(HttpUrl.BASE_URL+ url)
                 .post(body)
                 .build();
         client.newCall(request).enqueue(callback);

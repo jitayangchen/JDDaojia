@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import java.util.List;
 
 public class GoodsOrderBean implements Parcelable {
-    private int id;
+    private String orderId;
     private String userId;
     private String orderNumber;
     private String createOrderTime;
@@ -18,13 +18,14 @@ public class GoodsOrderBean implements Parcelable {
     private String goodsPrice;
     private String userAddress;
     private int orderEvaluation = 0;
+    private String evalutionContent;
 
     public GoodsOrderBean() {
 
     }
 
     protected GoodsOrderBean(Parcel in) {
-        id = in.readInt();
+        orderId = in.readString();
         userId = in.readString();
         orderNumber = in.readString();
         createOrderTime = in.readString();
@@ -35,6 +36,7 @@ public class GoodsOrderBean implements Parcelable {
         goodsPrice = in.readString();
         userAddress = in.readString();
         orderEvaluation = in.readInt();
+        evalutionContent = in.readString();
     }
 
     public static final Creator<GoodsOrderBean> CREATOR = new Creator<GoodsOrderBean>() {
@@ -49,12 +51,12 @@ public class GoodsOrderBean implements Parcelable {
         }
     };
 
-    public int getId() {
-        return id;
+    public String getOrderId() {
+        return orderId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 
     public String getUserId() {
@@ -137,10 +139,18 @@ public class GoodsOrderBean implements Parcelable {
         this.orderEvaluation = orderEvaluation;
     }
 
+    public String getEvalutionContent() {
+        return evalutionContent;
+    }
+
+    public void setEvalutionContent(String evalutionContent) {
+        this.evalutionContent = evalutionContent;
+    }
+
     @Override
     public String toString() {
         return "GoodsOrderBean{" +
-                "id=" + id +
+                "orderId=" + orderId +
                 ", userId='" + userId + '\'' +
                 ", orderNumber='" + orderNumber + '\'' +
                 ", createOrderTime='" + createOrderTime + '\'' +
@@ -151,6 +161,7 @@ public class GoodsOrderBean implements Parcelable {
                 ", goodsPrice='" + goodsPrice + '\'' +
                 ", userAddress='" + userAddress + '\'' +
                 ", orderEvaluation=" + orderEvaluation +
+                ", evalutionContent=" + evalutionContent +
                 '}';
     }
 
@@ -161,7 +172,7 @@ public class GoodsOrderBean implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id);
+        dest.writeString(orderId);
         dest.writeString(userId);
         dest.writeString(orderNumber);
         dest.writeString(createOrderTime);
@@ -172,5 +183,6 @@ public class GoodsOrderBean implements Parcelable {
         dest.writeString(goodsPrice);
         dest.writeString(userAddress);
         dest.writeInt(orderEvaluation);
+        dest.writeString(evalutionContent);
     }
 }

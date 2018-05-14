@@ -136,7 +136,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         builder.add("user_account", userAccount);
         builder.add("password", password);
 
-        HttpRequest.requestPost("http://115.28.17.184/user_login.php", builder, new Callback() {
+        HttpRequest.requestPost("user_login.php", builder, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
 
@@ -163,6 +163,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         SharedPreferencesUtil.setLoginStatus(LoginActivity.this, true);
                         SharedPreferencesUtil.saveUserAccount(LoginActivity.this, userAccount);
                         SharedPreferencesUtil.saveUserPassword(LoginActivity.this, password);
+                        SharedPreferencesUtil.saveUserId(LoginActivity.this, userId);
 
                         handler.sendEmptyMessage(1);
                     }
