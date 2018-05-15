@@ -11,15 +11,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.io.File;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShopBean;
 import cn.com.findfine.jddaojia.data.db.dao.ShopDao;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.shop.ShopDetialActivity;
-import cn.com.findfine.jddaojia.utils.FileUtil;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
 
 public class SearchGoodsListAdapter extends RecyclerView.Adapter<SearchGoodsListAdapter.ViewHolder> {
@@ -48,8 +47,7 @@ public class SearchGoodsListAdapter extends RecyclerView.Adapter<SearchGoodsList
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         GoodsBean goodsBean = goodsBeans.get(position);
-        File file = new File(FileUtil.getCacheFilePath() + goodsBean.getGoodsPhoto());
-        Glide.with(context).load(file).into(holder.ivGoodsPhoto);
+        Glide.with(context).load(HttpUrl.BASE_URL + goodsBean.getGoodsPhoto()).into(holder.ivGoodsPhoto);
         holder.tvGoodsName.setText(goodsBean.getGoodsName());
         holder.tvGoodsPrice.setText(String.valueOf(goodsBean.getGoodsPrice()));
     }
@@ -78,7 +76,8 @@ public class SearchGoodsListAdapter extends RecyclerView.Adapter<SearchGoodsList
 
                     Intent intent = new Intent(context, ShopDetialActivity.class);
 
-                    ShopBean shopBean = shopDao.queryShopByShopId(goodsBean.getShopId());
+//                    ShopBean shopBean = shopDao.queryShopByShopId(goodsBean.getShopId());
+                    ShopBean shopBean = new ShopBean();
                     intent.putExtra("shop_info", shopBean);
                     context.startActivity(intent);
                 }

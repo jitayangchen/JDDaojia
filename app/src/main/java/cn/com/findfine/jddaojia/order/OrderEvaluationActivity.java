@@ -131,7 +131,7 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
         FormBody.Builder builder = new FormBody.Builder();
         builder.add("order_id", goodsOrderBean.getOrderId());
         builder.add("order_evalution", String.valueOf(orderEvaluation));
-        builder.add("ecalution", "非常满意，好好好");
+        builder.add("evalution_content", "非常满意");
 
         HttpRequest.requestPost("order_evalution.php", builder, new Callback() {
             @Override

@@ -1,6 +1,8 @@
 package cn.com.findfine.jddaojia.search;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -10,11 +12,18 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.adapter.SearchGoodsListAdapter;
+import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.http.HttpRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -93,28 +102,44 @@ public class SearchListActivity extends BaseActivity implements View.OnClickList
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
                 Log.i("Response", result);
-//                try {
-//                    JSONObject jsonObj = new JSONObject(result);
-//                    JSONArray shopList = jsonObj.getJSONArray("goods_list");
-//                    goodsBeans = new ArrayList<>();
-//                    for (int i = 0; i < shopList.length(); i++) {
-//                        JSONObject goodsObj = shopList.getJSONObject(i);
-//                        GoodsBean goodsBean = new GoodsBean();
-//                        goodsBean.setShopId(Integer.valueOf(goodsObj.getString("shop_id")));
-//                        goodsBean.setGoodsId(Integer.valueOf(goodsObj.getString("goods_id")));
-//                        goodsBean.setGoodsName(goodsObj.getString("goods_name"));
-//                        goodsBean.setGoodsPhoto(goodsObj.getString("goods_photo"));
-//                        goodsBean.setGoodsPrice(Float.valueOf(goodsObj.getString("goods_price")));
-//
-//                        goodsBeans.add(goodsBean);
-//                    }
-//
-//                    handler.sendEmptyMessage(1);
+                try {
+                    JSONArray jsonArray = new JSONArray(result);
+                    List<GoodsBean> goodsBeans = new ArrayList<>();
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        JSONArray goodInfoArray = jsonObject.getJSONArray("good_info");
+                        for (int j = 0; j < goodInfoArray.length(); j++) {
+                            JSONObject goodsObj = goodInfoArray.getJSONObject(j);
 
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
+                            GoodsBean goodsBean = new GoodsBean();
+                            goodsBean.setShopId(Integer.valueOf(goodsObj.getString("shop_id")));
+                            goodsBean.setGoodsId(Integer.valueOf(goodsObj.getString("goods_id")));
+                            goodsBean.setGoodsName(goodsObj.getString("goods_name"));
+                            goodsBean.setGoodsPhoto(goodsObj.getString("goods_photo"));
+                            goodsBean.setGoodsPrice(Float.valueOf(goodsObj.getString("goods_price")));
+
+                            goodsBeans.add(goodsBean);
+                        }
+
+                    }
+                    searchGoodsListAdapter.setGoodsBeans(goodsBeans);
+                    handler.sendEmptyMessage(1);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
+
+    private Handler handler = new Handler() {
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == 1) {
+                searchGoodsListAdapter.notifyDataSetChanged();
+            }
+        }
+    };
 }

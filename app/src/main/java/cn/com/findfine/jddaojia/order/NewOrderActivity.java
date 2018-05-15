@@ -272,7 +272,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
             super.handleMessage(msg);
             if (msg.what == 1) {
                 Intent intent = new Intent(NewOrderActivity.this, PayActivity.class);
-                intent.putExtra("price", cartGoodsPrice);
+                intent.putExtra("price", cartGoodsPrice + 10.0f);
                 intent.putExtra("order_id", orderId);
                 startActivity(intent);
             }

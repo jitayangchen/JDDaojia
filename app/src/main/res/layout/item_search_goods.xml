@@ -16,8 +16,7 @@
             <ImageView
                 android:id="@+id/iv_goods_photo"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@mipmap/ic_launcher"/>
+                android:layout_height="80dp"/>
 
             <TextView
                 android:id="@+id/tv_goods_name"
