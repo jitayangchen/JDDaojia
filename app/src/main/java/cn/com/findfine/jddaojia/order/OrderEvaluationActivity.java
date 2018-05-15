@@ -131,7 +131,7 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
         FormBody.Builder builder = new FormBody.Builder();
         builder.add("order_id", goodsOrderBean.getOrderId());
         builder.add("order_evalution", String.valueOf(orderEvaluation));
-        builder.add("evaluation_content", "非常满意，好好好");
+        builder.add("ecalution", "非常满意，好好好");
 
         HttpRequest.requestPost("order_evalution.php", builder, new Callback() {
             @Override
@@ -174,6 +174,9 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
             super.handleMessage(msg);
             if (msg.what == 1) {
                 Toast.makeText(OrderEvaluationActivity.this, "订单评价提交成功", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.putExtra("is_evaluation", true);
+                setResult(1212, intent);
                 finish();
             }
         }

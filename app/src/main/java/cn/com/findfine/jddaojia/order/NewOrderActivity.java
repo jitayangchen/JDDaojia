@@ -61,6 +61,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
     private UserAddressDao userAddressDao;
     private TextView tvUserAddress;
     private TextView tvUserInfo;
+    private String orderId = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -192,7 +193,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
                 public void onResponse(Call call, Response response) throws IOException {
                     String result = response.body().string();
                     Log.i("Response", result);
-//                    {"success":true,"message":"添加成功"}
+//                    {"success":true,"message":"添加成功","data":22}}
                     try {
                         JSONObject jsonObj = new JSONObject(result);
                         String success = jsonObj.getString("success");
@@ -202,6 +203,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
                             ShoppingCartGoodsDao shoppingCartGoodsDao = new ShoppingCartGoodsDao();
                             shoppingCartGoodsDao.deleteGoodsCartByUserIdAndShopId(userId, shopId);
 
+                            orderId = String.valueOf(jsonObj.getInt("data"));
                             handler.sendEmptyMessage(1);
                         }
 
@@ -271,7 +273,7 @@ public class NewOrderActivity extends BaseActivity implements View.OnClickListen
             if (msg.what == 1) {
                 Intent intent = new Intent(NewOrderActivity.this, PayActivity.class);
                 intent.putExtra("price", cartGoodsPrice);
-                intent.putExtra("order_id", String.valueOf(shopId));
+                intent.putExtra("order_id", orderId);
                 startActivity(intent);
             }
         }

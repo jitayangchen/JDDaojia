@@ -1,5 +1,13 @@
 apply plugin: 'com.android.application'
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def keyStoreFilepath = properties.getProperty("keystore.path")
+def keyStorePassword = properties.getProperty("keystore.password")
+def keyStoreAlias = properties.getProperty("keystore.alias")
+def keyStoreAliasPassword = properties.getProperty("keystore.alias_password")
+
 android {
     compileSdkVersion 27
     defaultConfig {
@@ -10,8 +18,24 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
-    buildTypes {
+
+    signingConfigs {
         release {
+            storeFile file(keyStoreFilepath)
+            storePassword keyStorePassword
+            keyAlias keyStoreAlias
+            keyPassword keyStoreAliasPassword
+        }
+    }
+
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.release
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }

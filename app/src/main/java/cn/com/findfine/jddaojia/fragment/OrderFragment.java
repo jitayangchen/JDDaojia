@@ -130,6 +130,11 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
                 Log.i("Response", result);
+
+                if ("null".equals(result)) {
+                    handler.sendEmptyMessage(1);
+                    return ;
+                }
 //                result = JsonData.ORDER_DATA;
                 try {
                     List<GoodsOrderBean> goodsOrderBeans = new ArrayList<>();
@@ -144,6 +149,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                         goodsOrderBean.setShopId(Integer.valueOf(jsonObject.getString("shop_id")));
                         goodsOrderBean.setShopName(jsonObject.getString("shop_name"));
                         goodsOrderBean.setUserAddress(jsonObject.getString("user_address"));
+                        String goodsCountStr = jsonObject.getString("goods_count");
+                        JSONArray jsonArrayGoodsCount = new JSONArray(goodsCountStr);
+
                         String orderEvalution = jsonObject.getString("order_evalution");
                         if ("null".equals(orderEvalution)) {
                             goodsOrderBean.setOrderEvaluation(0);
@@ -156,12 +164,14 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                         List<GoodsBean> goodsBeans = new ArrayList<>();
                         JSONArray goodsListArray = jsonObject.getJSONArray("goods_list");
                         for (int j = 0; j < goodsListArray.length(); j++) {
+                            int goodsCount = jsonArrayGoodsCount.getInt(j);
                             JSONObject goodsObj = goodsListArray.getJSONObject(j);
                             GoodsBean goodsBean = new GoodsBean();
                             goodsBean.setGoodsId(Integer.valueOf(goodsObj.getString("goods_id")));
                             goodsBean.setGoodsName(goodsObj.getString("goods_name"));
                             goodsBean.setGoodsPhoto(goodsObj.getString("goods_photo"));
                             goodsBean.setGoodsPrice(Float.valueOf(goodsObj.getString("goods_price")));
+                            goodsBean.setGoodsCartCount(goodsCount);
                             goodsBeans.add(goodsBean);
                         }
 

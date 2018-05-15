@@ -1,9 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="20dp"
+    android:orientation="vertical"
     tools:context="cn.com.findfine.jddaojia.SplashActivity">
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="100dp"
+        android:textSize="20sp"
+        android:text="请输入IP地址:"/>
+
+    <EditText
+        android:id="@+id/et_ip_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="例：0.0.0.0"
+        />
+
+    <Button
+        android:id="@+id/btn_save_ip_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="保存"/>
+
+</LinearLayout>

@@ -27,6 +27,7 @@ public class OrderDetailActivity extends BaseActivity {
 
     private GoodsOrderBean goodsOrderBean;
     private float goodsPrice = 0.0f;
+    private Button btnOrderEvaluation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,25 +78,39 @@ public class OrderDetailActivity extends BaseActivity {
         tvGoodsPriceRight.setText("￥" + String.valueOf(goodsPrice));
         tvAllPriceRight.setText("￥" + String.valueOf(goodsPrice + 10.0f));
 
-        Button btnOrderEvaluation = findViewById(R.id.btn_order_evaluation);
+        btnOrderEvaluation = findViewById(R.id.btn_order_evaluation);
         btnOrderEvaluation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(OrderDetailActivity.this, OrderEvaluationActivity.class);
                 intent.putExtra("order_bean", goodsOrderBean);
-                startActivity(intent);
+                startActivityForResult(intent, 1211);
             }
         });
 
         if (goodsOrderBean.getOrderEvaluation() > 0) {
             btnOrderEvaluation.setVisibility(View.GONE);
         }
+
+
+        Button btnOrderPay = findViewById(R.id.btn_order_pay);
+        if (goodsOrderBean.getOrderStatus() != 1) {
+            btnOrderPay.setVisibility(View.VISIBLE);
+        }
+        btnOrderPay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(OrderDetailActivity.this, PayActivity.class);
+                intent.putExtra("price", goodsPrice + 10f);
+                intent.putExtra("order_id", goodsOrderBean.getOrderId());
+                startActivity(intent);
+            }
+        });
     }
 
     private void initGoodsList(List<GoodsBean> goodsBeans, LinearLayout llOrderGoods) {
         for (int i = 0; i < goodsBeans.size(); i++) {
             GoodsBean goodsBean = goodsBeans.get(i);
-            goodsBean.setGoodsCartCount(1);
 
             goodsPrice += goodsBean.getGoodsPrice() * goodsBean.getGoodsCartCount();
 
@@ -109,6 +124,17 @@ public class OrderDetailActivity extends BaseActivity {
             tvGoodsPrice.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()));
             tvGoodsPriceAndCount.setText("￥" + String.valueOf(goodsBean.getGoodsPrice()) + " X " + String.valueOf(goodsBean.getGoodsCartCount()));
             llOrderGoods.addView(view);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1211 && resultCode == 1212) {
+            boolean isEvaluation = data.getBooleanExtra("is_evaluation", false);
+            if (isEvaluation) {
+                btnOrderEvaluation.setVisibility(View.GONE);
+            }
         }
     }
 }

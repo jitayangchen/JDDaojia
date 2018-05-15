@@ -65,6 +65,18 @@ public class SharedPreferencesUtil {
         return sp.getString("password", "");
     }
 
+    public static void saveIpAddress(Context context, String ipAddress) {
+        SharedPreferences sp = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString("ip_address", ipAddress);
+        editor.apply();
+    }
+
+    public static String getIpAddress(Context context) {
+        SharedPreferences sp = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
+        return sp.getString("ip_address", "");
+    }
+
 //    public static void saveAddress(Context context, JSONObject jsonObject) throws JSONException {
 //        SharedPreferences sp = context.getSharedPreferences(context.getPackageName(), Context.MODE_PRIVATE);
 //        SharedPreferences.Editor editor = sp.edit();

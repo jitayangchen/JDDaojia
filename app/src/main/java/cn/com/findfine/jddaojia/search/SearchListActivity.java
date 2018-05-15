@@ -10,13 +10,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import java.util.List;
+import java.io.IOException;
 
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.adapter.SearchGoodsListAdapter;
-import cn.com.findfine.jddaojia.data.bean.GoodsBean;
-import cn.com.findfine.jddaojia.data.db.dao.GoodsDao;
+import cn.com.findfine.jddaojia.http.HttpRequest;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Response;
 
 public class SearchListActivity extends BaseActivity implements View.OnClickListener {
 
@@ -59,17 +62,59 @@ public class SearchListActivity extends BaseActivity implements View.OnClickList
             case R.id.btn_search:
                 String keyWords = etSearch.getText().toString();
                 if (!TextUtils.isEmpty(keyWords)) {
-                    GoodsDao goodsDao = new GoodsDao();
-                    List<GoodsBean> goodsBeans = goodsDao.queryGoodsByKeyWords(keyWords);
+//                    GoodsDao goodsDao = new GoodsDao();
+//                    List<GoodsBean> goodsBeans = goodsDao.queryGoodsByKeyWords(keyWords);
+//
+//                    for (GoodsBean goodsBean : goodsBeans) {
+//                        Log.i("KeyWords", goodsBean.toString());
+//                    }
+//
+//                    searchGoodsListAdapter.setGoodsBeans(goodsBeans);
+//                    searchGoodsListAdapter.notifyDataSetChanged();
 
-                    for (GoodsBean goodsBean : goodsBeans) {
-                        Log.i("KeyWords", goodsBean.toString());
-                    }
-
-                    searchGoodsListAdapter.setGoodsBeans(goodsBeans);
-                    searchGoodsListAdapter.notifyDataSetChanged();
+                    getGoodsByKeyWords(keyWords);
                 }
                 break;
         }
+    }
+
+    private void getGoodsByKeyWords(String keyWords) {
+        // good_search.php
+        FormBody.Builder builder = new FormBody.Builder();
+        builder.add("key_words", keyWords);
+
+        HttpRequest.requestPost("good_search.php", builder, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String result = response.body().string();
+                Log.i("Response", result);
+//                try {
+//                    JSONObject jsonObj = new JSONObject(result);
+//                    JSONArray shopList = jsonObj.getJSONArray("goods_list");
+//                    goodsBeans = new ArrayList<>();
+//                    for (int i = 0; i < shopList.length(); i++) {
+//                        JSONObject goodsObj = shopList.getJSONObject(i);
+//                        GoodsBean goodsBean = new GoodsBean();
+//                        goodsBean.setShopId(Integer.valueOf(goodsObj.getString("shop_id")));
+//                        goodsBean.setGoodsId(Integer.valueOf(goodsObj.getString("goods_id")));
+//                        goodsBean.setGoodsName(goodsObj.getString("goods_name"));
+//                        goodsBean.setGoodsPhoto(goodsObj.getString("goods_photo"));
+//                        goodsBean.setGoodsPrice(Float.valueOf(goodsObj.getString("goods_price")));
+//
+//                        goodsBeans.add(goodsBean);
+//                    }
+//
+//                    handler.sendEmptyMessage(1);
+
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                }
+            }
+        });
     }
 }

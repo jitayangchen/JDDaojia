@@ -11,13 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import cn.com.findfine.jddaojia.Constant;
 import cn.com.findfine.jddaojia.R;
+import cn.com.findfine.jddaojia.login.LoginActivity;
 import cn.com.findfine.jddaojia.myinfo.MyAddressActivity;
 import cn.com.findfine.jddaojia.myinfo.MyEvaluationActivity;
 import cn.com.findfine.jddaojia.myinfo.SettingActivity;
-import cn.com.findfine.jddaojia.login.LoginActivity;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
 
 
@@ -26,6 +27,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
     private LocalBroadcastManager localBroadcastManager;
     private MyBroadcastReceiver myBroadcastReceiver;
     private View btnLogin;
+    private TextView tvUserId;
 
     public MyInfoFragment() {
     }
@@ -55,6 +57,7 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
 
     private void init(View view) {
         btnLogin = view.findViewById(R.id.btn_login);
+        tvUserId = view.findViewById(R.id.tv_user_id);
         View btnSetting = view.findViewById(R.id.btn_setting);
         View llMyFollow = view.findViewById(R.id.ll_my_follow);
         View llMyEvaluation = view.findViewById(R.id.ll_my_evaluation);
@@ -119,8 +122,12 @@ public class MyInfoFragment extends Fragment implements View.OnClickListener {
         if (loginStatus) {
             Log.i("Login", "========= Login Success ========");
             btnLogin.setVisibility(View.GONE);
+            tvUserId.setVisibility(View.VISIBLE);
+            String userId = SharedPreferencesUtil.getUserId(getActivity());
+            tvUserId.setText("ID: " + (100000 + Integer.valueOf(userId)));
         } else {
             btnLogin.setVisibility(View.VISIBLE);
+            tvUserId.setVisibility(View.GONE);
         }
     }
 

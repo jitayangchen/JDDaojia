@@ -9,7 +9,12 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,24 +28,26 @@ import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShopBean;
 import cn.com.findfine.jddaojia.data.db.dao.GoodsDao;
 import cn.com.findfine.jddaojia.data.db.dao.ShopDao;
+import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.utils.FileUtil;
 import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements View.OnClickListener {
+
+    private EditText etIpAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        etIpAddress = findViewById(R.id.et_ip_address);
+        Button btnSaveIpAddress = findViewById(R.id.btn_save_ip_address);
+        btnSaveIpAddress.setOnClickListener(this);
 
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
-        } else {
-            initData();
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
+        String ipAddress = SharedPreferencesUtil.getIpAddress(this);
+        if (!TextUtils.isEmpty(ipAddress)) {
+            etIpAddress.setText(ipAddress);
         }
     }
 
@@ -117,6 +124,36 @@ public class SplashActivity extends AppCompatActivity {
         for (String fileName : list) {
             FileUtil.copyAssertFile(getAssets(), "goods/" + fileName, goodsDirectory + "/" + fileName);
             Log.i("FileName", fileName);
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_save_ip_address:
+                String ip = etIpAddress.getText().toString();
+                if (TextUtils.isEmpty(ip)) {
+                    Toast.makeText(this, "请输入IP地址", Toast.LENGTH_SHORT).show();
+                    return ;
+                }
+
+                SharedPreferencesUtil.saveIpAddress(this, ip);
+
+                HttpUrl.BASE_URL = "http://" + ip + "/";
+
+
+
+
+                int permission = ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+                if (permission != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 100);
+                } else {
+                    initData();
+                    startActivity(new Intent(this, MainActivity.class));
+                    finish();
+                }
+                break;
         }
     }
 }

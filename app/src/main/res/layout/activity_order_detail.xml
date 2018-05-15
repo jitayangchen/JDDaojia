@@ -56,11 +56,23 @@
                     android:layout_marginTop="10dp"
                     android:text="感谢使用京东到家"/>
 
-                <Button
-                    android:id="@+id/btn_order_evaluation"
+                <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="订单评价"/>
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_order_evaluation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="订单评价"/>
+
+                    <Button
+                        android:id="@+id/btn_order_pay"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:text="支付"/>
+                </FrameLayout>
 
             </LinearLayout>
 

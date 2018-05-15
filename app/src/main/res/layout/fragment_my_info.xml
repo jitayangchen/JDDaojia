@@ -30,7 +30,7 @@
         android:layout_height="80dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:background="@color/colorPrimary"
+        android:background="@mipmap/jimi_default_user_icon"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btn_setting"/>
 
@@ -45,6 +45,19 @@
         app:layout_constraintStart_toEndOf="@id/iv_avatar"
         android:text="登录"/>
 
+    <TextView
+        android:id="@+id/tv_user_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        app:layout_constraintTop_toTopOf="@id/iv_avatar"
+        app:layout_constraintBottom_toBottomOf="@id/iv_avatar"
+        app:layout_constraintStart_toEndOf="@id/iv_avatar"
+        android:visibility="gone"
+        android:textSize="20sp"
+        android:textColor="@android:color/white"
+        android:text="ID: 100001"/>
+
     <LinearLayout
         android:id="@+id/ll_my_follow"
         android:layout_width="wrap_content"
@@ -54,6 +67,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ll_my_evaluation"
         android:gravity="center_horizontal"
+        android:visibility="gone"
         android:orientation="vertical">
 
         <ImageView
@@ -72,8 +86,9 @@
         android:id="@+id/ll_my_evaluation"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/ll_my_follow"
-        app:layout_constraintStart_toEndOf="@id/ll_my_follow"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_bg_info_header"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ll_my_address"
         android:gravity="center_horizontal"
         android:orientation="vertical">
@@ -94,7 +109,7 @@
         android:id="@+id/ll_my_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/ll_my_follow"
+        app:layout_constraintTop_toTopOf="@id/ll_my_evaluation"
         app:layout_constraintStart_toEndOf="@id/ll_my_evaluation"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_horizontal"

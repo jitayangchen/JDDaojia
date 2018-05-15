@@ -72,6 +72,15 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         View btnRegister = findViewById(R.id.btn_register);
         btnRegister.setOnClickListener(this);
+
+        String userAccount = SharedPreferencesUtil.getUserAccount(this);
+        String userPassword = SharedPreferencesUtil.getUserPassword(this);
+        if (!TextUtils.isEmpty(userAccount)) {
+            etUserAccount.setText(userAccount);
+        }
+        if (!TextUtils.isEmpty(userPassword)) {
+            etPassword.setText(userPassword);
+        }
     }
 
 
