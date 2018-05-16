@@ -175,6 +175,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                         SharedPreferencesUtil.saveUserId(LoginActivity.this, userId);
 
                         handler.sendEmptyMessage(1);
+                    } else {
+                        handler.sendEmptyMessage(2);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -196,6 +198,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 //                SharedPreferencesUtil.saveUserAccount(LoginActivity.this, userAccount);
 //                SharedPreferencesUtil.saveUserPassword(LoginActivity.this, password);
                 Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+            } else if (msg.what == 2) {
+                Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
             }
         }
     };

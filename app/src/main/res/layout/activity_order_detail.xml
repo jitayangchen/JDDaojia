@@ -33,11 +33,11 @@
             <LinearLayout
                 android:id="@+id/ll_order_status"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="150dp"
                 android:gravity="center_horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:background="@mipmap/icon_shopcar_item_lbg"
+                android:background="@drawable/icon_shopcar_item_lbg"
                 android:layout_margin="8dp"
                 android:padding="20dp"
                 android:orientation="vertical">
@@ -48,7 +48,7 @@
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="订单已完成"/>
+                    android:text="订单状态"/>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -58,12 +58,14 @@
 
                 <FrameLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp">
 
                     <Button
                         android:id="@+id/btn_order_evaluation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:text="订单评价"/>
 
                     <Button
@@ -72,6 +74,15 @@
                         android:layout_height="wrap_content"
                         android:visibility="gone"
                         android:text="支付"/>
+
+                    <TextView
+                        android:id="@+id/tv_delivered"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:visibility="gone"/>
                 </FrameLayout>
 
             </LinearLayout>

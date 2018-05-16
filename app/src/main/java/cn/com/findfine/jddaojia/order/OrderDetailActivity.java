@@ -18,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
+import cn.com.findfine.jddaojia.Constant;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.GoodsOrderBean;
@@ -28,6 +29,8 @@ public class OrderDetailActivity extends BaseActivity {
     private GoodsOrderBean goodsOrderBean;
     private float goodsPrice = 0.0f;
     private Button btnOrderEvaluation;
+    private Button btnOrderPay;
+    private TextView tvDelivered;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,9 @@ public class OrderDetailActivity extends BaseActivity {
         tvAllPriceRight.setText("￥" + String.valueOf(goodsPrice + 10.0f));
 
         btnOrderEvaluation = findViewById(R.id.btn_order_evaluation);
+        btnOrderPay = findViewById(R.id.btn_order_pay);
+        tvDelivered = findViewById(R.id.tv_delivered);
+
         btnOrderEvaluation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,15 +94,7 @@ public class OrderDetailActivity extends BaseActivity {
             }
         });
 
-        if (goodsOrderBean.getOrderEvaluation() > 0) {
-            btnOrderEvaluation.setVisibility(View.GONE);
-        }
 
-
-        Button btnOrderPay = findViewById(R.id.btn_order_pay);
-        if (goodsOrderBean.getOrderStatus() != 1) {
-            btnOrderPay.setVisibility(View.VISIBLE);
-        }
         btnOrderPay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,6 +104,8 @@ public class OrderDetailActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
+        showOrderStatus(goodsOrderBean.getOrderStatus(), goodsOrderBean.getOrderEvaluation() <= 0);
     }
 
     private void initGoodsList(List<GoodsBean> goodsBeans, LinearLayout llOrderGoods) {
@@ -133,8 +133,29 @@ public class OrderDetailActivity extends BaseActivity {
         if (requestCode == 1211 && resultCode == 1212) {
             boolean isEvaluation = data.getBooleanExtra("is_evaluation", false);
             if (isEvaluation) {
-                btnOrderEvaluation.setVisibility(View.GONE);
+                showOrderStatus(goodsOrderBean.getOrderStatus(), false);
             }
+        }
+    }
+
+    private void showOrderStatus(int orderStatus, boolean isShowEvaluation) {
+        switch (orderStatus) {
+            case Constant.ORDER_STATUS_SUCCESS:
+                if (isShowEvaluation) {
+                    btnOrderEvaluation.setVisibility(View.VISIBLE);
+                } else {
+                    btnOrderEvaluation.setVisibility(View.GONE);
+                    tvDelivered.setVisibility(View.VISIBLE);
+                    tvDelivered.setText("等待商家发货");
+                }
+                break;
+            case Constant.ORDER_STATUS_UNPAY:
+                btnOrderPay.setVisibility(View.VISIBLE);
+                break;
+            case Constant.ORDER_STATUS_DELIVERED:
+                tvDelivered.setVisibility(View.VISIBLE);
+                tvDelivered.setText("已发货");
+                break;
         }
     }
 }

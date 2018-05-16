@@ -10,4 +10,5 @@ public class Constant {
 
     public static final int ORDER_STATUS_SUCCESS = 1;
     public static final int ORDER_STATUS_UNPAY = 2;
+    public static final int ORDER_STATUS_DELIVERED = 3;
 }

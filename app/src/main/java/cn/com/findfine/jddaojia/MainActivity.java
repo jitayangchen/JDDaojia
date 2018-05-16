@@ -79,7 +79,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        selected(v);
         switch (v.getId()) {
             case R.id.ll_home_page:
                 showFragment(homePageFragment, TAG_HOME_PAGE);
@@ -103,6 +102,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         if (tag.equals(currentPage))
             return ;
 
+        selected(tag);
         currentPage = tag;
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -132,6 +132,23 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         llMyInfo.setSelected(false);
 
         view.setSelected(true);
+    }
+
+    private void selected(String tag) {
+        switch (tag) {
+            case TAG_HOME_PAGE:
+                selected(llHomePage);
+                break;
+            case TAG_SHOPPING_CART:
+                selected(llShoppintCart);
+                break;
+            case TAG_ORDER:
+                selected(llOrder);
+                break;
+            case TAG_MT_INFO:
+                selected(llMyInfo);
+                break;
+        }
     }
 
 }
