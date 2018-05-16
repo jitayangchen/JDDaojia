@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,12 +19,14 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.BaseActivity;
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.adapter.SearchGoodsListAdapter;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
+import cn.com.findfine.jddaojia.data.bean.ShopBean;
 import cn.com.findfine.jddaojia.http.HttpRequest;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -102,11 +105,24 @@ public class SearchListActivity extends BaseActivity implements View.OnClickList
             public void onResponse(Call call, Response response) throws IOException {
                 String result = response.body().string();
                 Log.i("Response", result);
+                if ("null".equals(result)) {
+                    handler.sendEmptyMessage(2);
+                    return ;
+                }
                 try {
                     JSONArray jsonArray = new JSONArray(result);
                     List<GoodsBean> goodsBeans = new ArrayList<>();
+                    HashMap<Integer, ShopBean> shopBeanHashMap = new HashMap<>();
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonObject = jsonArray.getJSONObject(i);
+                        ShopBean shopBean = new ShopBean();
+                        shopBean.setShopName(jsonObject.getString("shop_name"));
+                        shopBean.setShopPhoto(jsonObject.getString("shop_logo"));
+                        shopBean.setShopAddress(jsonObject.getString("shop_address"));
+                        int shoppId = Integer.valueOf(jsonObject.getString("id"));
+                        shopBean.setShopId(shoppId);
+                        shopBeanHashMap.put(shoppId, shopBean);
+
                         JSONArray goodInfoArray = jsonObject.getJSONArray("good_info");
                         for (int j = 0; j < goodInfoArray.length(); j++) {
                             JSONObject goodsObj = goodInfoArray.getJSONObject(j);
@@ -122,7 +138,7 @@ public class SearchListActivity extends BaseActivity implements View.OnClickList
                         }
 
                     }
-                    searchGoodsListAdapter.setGoodsBeans(goodsBeans);
+                    searchGoodsListAdapter.setGoodsBeans(goodsBeans, shopBeanHashMap);
                     handler.sendEmptyMessage(1);
 
                 } catch (JSONException e) {
@@ -139,6 +155,8 @@ public class SearchListActivity extends BaseActivity implements View.OnClickList
             super.handleMessage(msg);
             if (msg.what == 1) {
                 searchGoodsListAdapter.notifyDataSetChanged();
+            } else if (msg.what == 2) {
+                Toast.makeText(SearchListActivity.this, "没有这个商品", Toast.LENGTH_SHORT).show();
             }
         }
     };

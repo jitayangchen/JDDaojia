@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -132,7 +133,7 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
                 Log.i("Response", result);
 
                 if ("null".equals(result)) {
-                    handler.sendEmptyMessage(1);
+                    handler.sendEmptyMessage(2);
                     return ;
                 }
 //                result = JsonData.ORDER_DATA;
@@ -225,6 +226,9 @@ public class OrderFragment extends Fragment implements View.OnClickListener {
             if (msg.what == 1) {
                 srlOrderPage.setRefreshing(false);
                 orderAdapter.notifyDataSetChanged();
+            } else if (msg.what == 2) {
+                srlOrderPage.setRefreshing(false);
+                Toast.makeText(getActivity(), "没有订单数据", Toast.LENGTH_SHORT).show();
             }
         }
     };

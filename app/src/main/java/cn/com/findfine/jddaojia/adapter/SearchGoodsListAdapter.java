@@ -11,31 +11,28 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.util.HashMap;
 import java.util.List;
 
 import cn.com.findfine.jddaojia.R;
 import cn.com.findfine.jddaojia.data.bean.GoodsBean;
 import cn.com.findfine.jddaojia.data.bean.ShopBean;
-import cn.com.findfine.jddaojia.data.db.dao.ShopDao;
 import cn.com.findfine.jddaojia.http.HttpUrl;
 import cn.com.findfine.jddaojia.shop.ShopDetialActivity;
-import cn.com.findfine.jddaojia.utils.SharedPreferencesUtil;
 
 public class SearchGoodsListAdapter extends RecyclerView.Adapter<SearchGoodsListAdapter.ViewHolder> {
 
     private Context context;
     private List<GoodsBean> goodsBeans;
-    private String userId;
-    private final ShopDao shopDao;
+    private HashMap<Integer, ShopBean> shopBeanHashMap;
 
     public SearchGoodsListAdapter(Context context) {
         this.context = context;
-        userId = SharedPreferencesUtil.getUserAccount(context);
-        shopDao = new ShopDao();
     }
 
-    public void setGoodsBeans(List<GoodsBean> goodsBeans) {
+    public void setGoodsBeans(List<GoodsBean> goodsBeans, HashMap<Integer, ShopBean> shopBeanHashMap) {
         this.goodsBeans = goodsBeans;
+        this.shopBeanHashMap = shopBeanHashMap;
     }
 
     @Override
@@ -74,10 +71,9 @@ public class SearchGoodsListAdapter extends RecyclerView.Adapter<SearchGoodsList
                 public void onClick(View v) {
                     GoodsBean goodsBean = goodsBeans.get(getLayoutPosition());
 
-                    Intent intent = new Intent(context, ShopDetialActivity.class);
+                    ShopBean shopBean = shopBeanHashMap.get(goodsBean.getShopId());
 
-//                    ShopBean shopBean = shopDao.queryShopByShopId(goodsBean.getShopId());
-                    ShopBean shopBean = new ShopBean();
+                    Intent intent = new Intent(context, ShopDetialActivity.class);
                     intent.putExtra("shop_info", shopBean);
                     context.startActivity(intent);
                 }
