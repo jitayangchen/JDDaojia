@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,8 +34,10 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
 
     private List<ImageView> imageViews;
     private TextView tvEvaluationResult;
+    private String evaluationContent = "";
     private int orderEvaluation = 0;
     private GoodsOrderBean goodsOrderBean;
+    private EditText etEvaluationContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +70,7 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
         ImageView ivStar_5 = findViewById(R.id.iv_star_5);
 
         tvEvaluationResult = findViewById(R.id.tv_evaluation_result);
+        etEvaluationContent = findViewById(R.id.et_evaluation_content);
         Button btnCommitEvaluation = findViewById(R.id.btn_commit_evaluation);
 
         btnCommitEvaluation.setOnClickListener(this);
@@ -91,27 +96,32 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
         switch (v.getId()) {
             case R.id.iv_star_1:
                 setStarStatus(1);
-                tvEvaluationResult.setText("非常不满意");
+                evaluationContent = "非常不满意";
+                tvEvaluationResult.setText(evaluationContent);
                 orderEvaluation = 1;
                 break;
             case R.id.iv_star_2:
                 setStarStatus(2);
-                tvEvaluationResult.setText("不满意");
+                evaluationContent = "不满意";
+                tvEvaluationResult.setText(evaluationContent);
                 orderEvaluation = 2;
                 break;
             case R.id.iv_star_3:
                 setStarStatus(3);
-                tvEvaluationResult.setText("一般");
+                evaluationContent = "一般";
+                tvEvaluationResult.setText(evaluationContent);
                 orderEvaluation = 3;
                 break;
             case R.id.iv_star_4:
                 setStarStatus(4);
-                tvEvaluationResult.setText("满意");
+                evaluationContent = "满意";
+                tvEvaluationResult.setText(evaluationContent);
                 orderEvaluation = 4;
                 break;
             case R.id.iv_star_5:
                 setStarStatus(5);
-                tvEvaluationResult.setText("非常满意");
+                evaluationContent = "非常满意";
+                tvEvaluationResult.setText(evaluationContent);
                 orderEvaluation = 5;
                 break;
             case R.id.btn_commit_evaluation:
@@ -120,18 +130,24 @@ public class OrderEvaluationActivity extends BaseActivity implements View.OnClic
                     return ;
                 }
 
-                if (orderEvaluation != 0) {
-                    commitOrderEvaluation(orderEvaluation);
+                if (orderEvaluation > 0) {
+                    String orderEvaluationContent = etEvaluationContent.getText().toString();
+                    if (TextUtils.isEmpty(orderEvaluationContent)) {
+                        orderEvaluationContent = evaluationContent;
+                    }
+                    commitOrderEvaluation(orderEvaluation, orderEvaluationContent);
+                } else {
+                    Toast.makeText(OrderEvaluationActivity.this, "你没有对订单做出评价", Toast.LENGTH_SHORT).show();
                 }
                 break;
         }
     }
 
-    private void commitOrderEvaluation(int orderEvaluation) {
+    private void commitOrderEvaluation(int orderEvaluation, String evaluationContent) {
         FormBody.Builder builder = new FormBody.Builder();
         builder.add("order_id", goodsOrderBean.getOrderId());
         builder.add("order_evalution", String.valueOf(orderEvaluation));
-        builder.add("evalution_content", "非常满意");
+        builder.add("evalution_content", evaluationContent);
 
         HttpRequest.requestPost("order_evalution.php", builder, new Callback() {
             @Override

@@ -161,6 +161,7 @@ public class MyEvaluationActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             GoodsOrderBean goodsOrderBean = goodsOrderBeans.get(position);
             holder.tvShopName.setText(goodsOrderBean.getShopName());
+            holder.tvEvaluationContent.setText(goodsOrderBean.getEvalutionContent());
 
             switch (goodsOrderBean.getOrderEvaluation()) {
                 case 1:
@@ -202,16 +203,18 @@ public class MyEvaluationActivity extends BaseActivity {
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView tvShopName;
-        private final ImageView ivStar_1;
-        private final ImageView ivStar_2;
-        private final ImageView ivStar_3;
-        private final ImageView ivStar_4;
-        private final ImageView ivStar_5;
+        private TextView tvShopName;
+        private TextView tvEvaluationContent;
+        private ImageView ivStar_1;
+        private ImageView ivStar_2;
+        private ImageView ivStar_3;
+        private ImageView ivStar_4;
+        private ImageView ivStar_5;
 
         public ViewHolder(View itemView) {
             super(itemView);
             tvShopName = itemView.findViewById(R.id.tv_shop_name);
+            tvEvaluationContent = itemView.findViewById(R.id.tv_evaluation_content);
             ivStar_1 = itemView.findViewById(R.id.iv_star_1);
             ivStar_2 = itemView.findViewById(R.id.iv_star_2);
             ivStar_3 = itemView.findViewById(R.id.iv_star_3);

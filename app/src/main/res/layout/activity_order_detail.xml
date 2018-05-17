@@ -33,7 +33,7 @@
             <LinearLayout
                 android:id="@+id/ll_order_status"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="200dp"
                 android:gravity="center_horizontal"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -59,14 +59,7 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp">
-
-                    <Button
-                        android:id="@+id/btn_order_evaluation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:text="订单评价"/>
+                    android:layout_marginTop="10dp">
 
                     <Button
                         android:id="@+id/btn_order_pay"
@@ -84,6 +77,14 @@
                         android:textStyle="bold"
                         android:visibility="gone"/>
                 </FrameLayout>
+
+                <Button
+                    android:id="@+id/btn_order_evaluation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    android:text="订单评价"/>
 
             </LinearLayout>
 

@@ -141,13 +141,8 @@ public class OrderDetailActivity extends BaseActivity {
     private void showOrderStatus(int orderStatus, boolean isShowEvaluation) {
         switch (orderStatus) {
             case Constant.ORDER_STATUS_SUCCESS:
-                if (isShowEvaluation) {
-                    btnOrderEvaluation.setVisibility(View.VISIBLE);
-                } else {
-                    btnOrderEvaluation.setVisibility(View.GONE);
-                    tvDelivered.setVisibility(View.VISIBLE);
-                    tvDelivered.setText("等待商家发货");
-                }
+                tvDelivered.setVisibility(View.VISIBLE);
+                tvDelivered.setText("等待商家发货");
                 break;
             case Constant.ORDER_STATUS_UNPAY:
                 btnOrderPay.setVisibility(View.VISIBLE);
@@ -155,6 +150,12 @@ public class OrderDetailActivity extends BaseActivity {
             case Constant.ORDER_STATUS_DELIVERED:
                 tvDelivered.setVisibility(View.VISIBLE);
                 tvDelivered.setText("已发货");
+
+                if (isShowEvaluation) {
+                    btnOrderEvaluation.setVisibility(View.VISIBLE);
+                } else {
+                    btnOrderEvaluation.setVisibility(View.GONE);
+                }
                 break;
         }
     }
